@@ -14,7 +14,15 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-    }
+
+		let defaults = SettingsBundleViewController.defaults(fileName: "Settings.bundle")
+		UserDefaults.standard.register(defaults: defaults)
+		print("========")
+		defaults.forEach {
+			print("\($0.key): \($0.value)")
+		}
+		print("========")
+	}
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -22,7 +30,7 @@ class ViewController: UIViewController {
     }
 
 	@IBAction func openSettings(_ sender: Any) {
-		let viewController = SettingsBundleViewController(file: "")
+		let viewController = SettingsBundleViewController(fileName: "Settings.bundle/Root")
 		present(viewController, animated: true, completion: nil)
 	}
 

@@ -18,15 +18,31 @@ public class SettingsBundleViewController: UISplitViewController {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	convenience public init(file: String) {
+	convenience public init(fileName: String) {
 		self.init()
-		viewControllers = (0...1).map {
-			let viewController = SettingsViewController(file: "\($0)")
+		viewControllers = [true, false].map {
+			let viewController = SettingsViewController(splitMaster: $0, fileName: fileName)
 			return UINavigationController(rootViewController: viewController)
 		}
 
 		preferredDisplayMode = .allVisible
 		delegate = self
+	}
+
+	// Get default value in UserDefaults
+	public static func defaults(fileName: String) -> [String: Any] {
+		var res = [String: Any]()
+		Bundle.main.urls(forResourcesWithExtension: "plist", subdirectory: fileName)?.forEach {
+			let plistData = NSDictionary(contentsOf: $0)
+			(plistData?["PreferenceSpecifiers"] as? NSArray)?.forEach {
+				if let dic = $0 as? [String: Any],
+					let key = dic["Key"] as? String,
+					let value = dic["DefaultValue"] {
+					res[key] = value
+				}
+			}
+		}
+		return res
 	}
 
 }
