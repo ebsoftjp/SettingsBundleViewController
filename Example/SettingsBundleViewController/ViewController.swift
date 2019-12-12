@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SettingsBundleViewController
 
 class ViewController: UIViewController {
 
@@ -19,6 +20,11 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+
+	@IBAction func openSettings(_ sender: Any) {
+		let viewController = SettingsBundleViewController(file: "")
+		present(viewController, animated: true, completion: nil)
+	}
 
 }
 
