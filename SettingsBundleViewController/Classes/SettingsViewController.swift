@@ -15,7 +15,6 @@ public class SettingsViewController: UIViewController {
 	private var currentFileName: String!
 	private var fileName: String { return currentFileName ?? "Root" }
 	private var cellArray = [SettingsCellData]()
-	private let reuseIdentifier = "Cell"
 
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
@@ -62,7 +61,6 @@ public class SettingsViewController: UIViewController {
 
 		// Create table view
 		let tableView = UITableView(frame: .zero, style: .grouped)
-		tableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
 		tableView.delegate = self
 		tableView.dataSource = self
 		view.addSubview(tableView)
@@ -146,13 +144,17 @@ extension SettingsViewController: UITableViewDataSource {
 		return cellArray[section].childData.count
 	}
 
-	// Cell
+	// Create cell
 	public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
 		let data = cellArray[indexPath.section].childData[indexPath.row]
-		cell.textLabel?.text = localized(data.title)
-		cell.accessoryType = data.isChildPane ? .disclosureIndicator : .none
-		return cell
+		let reuseIdentifier = data.specifierType ?? "Cell"
+		var cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier)
+		if cell == nil {
+			cell = UITableViewCell(data: data, reuseIdentifier: reuseIdentifier)
+		}
+		cell!.textLabel?.text = localized(data.title)
+		cell!.accessoryType = data.isChildPane ? .disclosureIndicator : .none
+		return cell!
 	}
 
 }
