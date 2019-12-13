@@ -12,6 +12,8 @@ public class SettingsViewController: UIViewController {
 
 	private var splitMaster = false
 	private var bundleFileName: String!
+	private var currentFileName: String!
+	private var fileName: String { return currentFileName ?? "Root" }
 	private var cellArray = [SettingsCellData]()
 	private let reuseIdentifier = "Cell"
 
@@ -19,10 +21,11 @@ public class SettingsViewController: UIViewController {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	public init(splitMaster: Bool, bundleFileName: String) {
+	public init(splitMaster: Bool, bundleFileName: String, fileName: String? = nil) {
 		super.init(nibName: nil, bundle: nil)
 		self.splitMaster = splitMaster
 		self.bundleFileName = bundleFileName
+		self.currentFileName = fileName
 	}
 
 	override public func viewDidLoad() {
@@ -41,7 +44,7 @@ public class SettingsViewController: UIViewController {
 		}
 
 		// Create cell data
-		if let filePath = Bundle.main.path(forResource: bundleFileName + "/Root", ofType: "plist") {
+		if let filePath = Bundle.main.path(forResource: bundleFileName + "/" + fileName, ofType: "plist") {
 			(NSDictionary(contentsOfFile: filePath)?["PreferenceSpecifiers"] as? NSArray)?.enumerated().forEach {
 				if let plistData = $0.element as? Dictionary<String, Any> {
 					let data = SettingsCellData(plistData: plistData)
@@ -80,6 +83,17 @@ public class SettingsViewController: UIViewController {
 		}
 	}
 
+	override public func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+
+		// Deselect selected cell
+		view.subviews.compactMap { $0 as? UITableView }.forEach {
+			if let indexPath = $0.indexPathForSelectedRow {
+				$0.deselectRow(at: indexPath, animated: true)
+			}
+		}
+	}
+
 	// Localized text from Settings.bundle
 	func localized(_ text: String?) -> String? {
 		guard let text = text else {
@@ -100,7 +114,13 @@ extension SettingsViewController: UITableViewDelegate {
 
 	// Did select
 	public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		tableView.deselectRow(at: indexPath, animated: true)
+		let data = cellArray[indexPath.section].childData[indexPath.row]
+		if data.isChildPane {
+			let viewController = SettingsViewController(splitMaster: false, bundleFileName: bundleFileName, fileName: data.file)
+			navigationController?.pushViewController(viewController, animated: true)
+		} else {
+			tableView.deselectRow(at: indexPath, animated: true)
+		}
 	}
 
 	// Header title
@@ -131,6 +151,7 @@ extension SettingsViewController: UITableViewDataSource {
 		let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
 		let data = cellArray[indexPath.section].childData[indexPath.row]
 		cell.textLabel?.text = localized(data.title)
+		cell.accessoryType = data.isChildPane ? .disclosureIndicator : .none
 		return cell
 	}
 

@@ -12,9 +12,7 @@ public class SettingsBundleViewController: UISplitViewController {
 
 	// Use bundle filename
 	static var currentBundleFileName: String?
-	static var bundleFileName: String {
-		return currentBundleFileName ?? "Settings.bundle"
-	}
+	static var bundleFileName: String { return currentBundleFileName ?? "Settings.bundle" }
 
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
