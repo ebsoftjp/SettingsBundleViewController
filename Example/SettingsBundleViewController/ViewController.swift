@@ -15,7 +15,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
 
-		let defaults = SettingsBundleViewController.defaults(fileName: "Settings.bundle")
+		let defaults = SettingsBundleViewController.defaults()
 		UserDefaults.standard.register(defaults: defaults)
 		print("========")
 		defaults.forEach {
@@ -30,7 +30,7 @@ class ViewController: UIViewController {
     }
 
 	@IBAction func openSettings(_ sender: Any) {
-		let viewController = SettingsBundleViewController(fileName: "Settings.bundle/Root")
+		let viewController = SettingsBundleViewController()
 		present(viewController, animated: true, completion: nil)
 	}
 

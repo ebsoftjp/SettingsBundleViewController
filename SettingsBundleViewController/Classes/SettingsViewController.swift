@@ -11,29 +11,28 @@ import UIKit
 public class SettingsViewController: UIViewController {
 
 	private var splitMaster = false
-	private var fileName: String!
-	private var cellArray = [String]()
+	private var bundleFileName: String!
+	private var cellArray = [SettingsCellData]()
 	private let reuseIdentifier = "Cell"
-
-	override public init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-		super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-	}
 
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	convenience public init(splitMaster: Bool, fileName: String) {
-		self.init()
+	public init(splitMaster: Bool, bundleFileName: String) {
+		super.init(nibName: nil, bundle: nil)
 		self.splitMaster = splitMaster
-		self.fileName = fileName
+		self.bundleFileName = bundleFileName
 	}
 
 	override public func viewDidLoad() {
 		super.viewDidLoad()
 
+		// Title
+		title = bundleFileName
+
+		// View
 		view.backgroundColor = .clear
-		title = fileName
 
 		// Close button
 		if splitMaster {
@@ -42,12 +41,18 @@ public class SettingsViewController: UIViewController {
 		}
 
 		// Create cell data
-		if let filePath = Bundle.main.path(forResource: fileName, ofType: "plist") {
+		if let filePath = Bundle.main.path(forResource: bundleFileName + "/Root", ofType: "plist") {
 			(NSDictionary(contentsOfFile: filePath)?["PreferenceSpecifiers"] as? NSArray)?.enumerated().forEach {
-				if let dic = $0.element as? Dictionary<String, Any>,
-					let type = dic["Type"] as? String {
-					let title = dic["Title"] as? String ?? "--"
-					cellArray.append(type + ": " + title)
+				if let plistData = $0.element as? Dictionary<String, Any> {
+					let data = SettingsCellData(plistData: plistData)
+					if data.isGroup {
+						cellArray.append(data)
+					} else {
+						if cellArray.count == 0 {
+							cellArray.append(SettingsCellData(plistData: ["Type": "PSGroupSpecifier"]))
+						}
+						cellArray[cellArray.count - 1].childData.append(data)
+					}
 				}
 			}
 		}
@@ -58,23 +63,34 @@ public class SettingsViewController: UIViewController {
 		tableView.delegate = self
 		tableView.dataSource = self
 		view.addSubview(tableView)
-		addConstraintsView(tableView)
-	}
 
-	func addConstraintsView(_ view: UIView) {
-		view.translatesAutoresizingMaskIntoConstraints = false
-		view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+		// Add constraint to table view
+		tableView.translatesAutoresizingMaskIntoConstraints = false
+		tableView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 		for attr in [.leading, .trailing, .top, .bottom] as [NSLayoutConstraint.Attribute] {
-			view.superview?.addConstraint(
+			view.addConstraint(
 				NSLayoutConstraint(
-					item: view,
+					item: tableView,
 					attribute: attr,
 					relatedBy: .equal,
-					toItem: view.superview,
+					toItem: view,
 					attribute: attr,
 					multiplier: 1,
 					constant: 0))
 		}
+	}
+
+	// Localized text from Settings.bundle
+	func localized(_ text: String?) -> String? {
+		guard let text = text else {
+			return nil
+		}
+		return NSLocalizedString(
+			text,
+			tableName: bundleFileName + "/\(Locale.current.languageCode ?? "en").lproj/Root",
+			bundle: Bundle.main,
+			value: text,
+			comment: text)
 	}
 
 }
@@ -82,8 +98,19 @@ public class SettingsViewController: UIViewController {
 // MARK: - UITableViewDelegate
 extension SettingsViewController: UITableViewDelegate {
 
+	// Did select
 	public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: true)
+	}
+
+	// Header title
+	public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+		return localized(cellArray[section].headerTitle)
+	}
+
+	// Footer title
+	public func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+		return localized(cellArray[section].footerTitle)
 	}
 
 }
@@ -92,16 +119,18 @@ extension SettingsViewController: UITableViewDelegate {
 extension SettingsViewController: UITableViewDataSource {
 
 	public func numberOfSections(in tableView: UITableView) -> Int {
-		return 1
-	}
-
-	public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return cellArray.count
 	}
 
+	public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return cellArray[section].childData.count
+	}
+
+	// Cell
 	public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
-		cell.textLabel?.text = cellArray[indexPath.row]
+		let data = cellArray[indexPath.section].childData[indexPath.row]
+		cell.textLabel?.text = localized(data.title)
 		return cell
 	}
 

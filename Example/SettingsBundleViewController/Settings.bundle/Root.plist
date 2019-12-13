@@ -56,6 +56,24 @@
 			<key>MaximumValueImage</key>
 			<string></string>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>About</string>
+			<key>FooterText</key>
+			<string>Footer title</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>Version</string>
+			<key>Key</key>
+			<string>app_version</string>
+			<key>DefaultValue</key>
+			<string>0.1.0</string>
+		</dict>
 	</array>
 </dict>
 </plist>
