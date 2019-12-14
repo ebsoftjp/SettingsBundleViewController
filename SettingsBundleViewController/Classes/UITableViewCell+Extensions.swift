@@ -27,6 +27,26 @@ extension UITableViewCell {
 		if data.specifierType == "PSToggleSwitchSpecifier" {
 			accessoryView = UISwitch()
 		}
+		if data.specifierType == "PSSliderSpecifier" {
+			let slider = UISlider()
+			addSubview(slider)
+
+			// Add constraint to slider
+			slider.translatesAutoresizingMaskIntoConstraints = false
+			slider.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+			for attr in [.leading: .leadingMargin, .trailing: .trailingMargin, .centerY: .centerY]
+				as [NSLayoutConstraint.Attribute: NSLayoutConstraint.Attribute] {
+				self.addConstraint(
+					NSLayoutConstraint(
+						item: slider,
+						attribute: attr.key,
+						relatedBy: .equal,
+						toItem: self,
+						attribute: attr.value,
+						multiplier: 1,
+						constant: 0))
+			}
+		}
 	}
 
 }

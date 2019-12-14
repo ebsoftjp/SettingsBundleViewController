@@ -18,8 +18,8 @@ struct SettingsCellData {
 
 	var headerTitle: String? { return title }
 	var footerTitle: String? { return plistData["FooterText"] as? String }
-	var isGroup: Bool { return specifierType == "PSGroupSpecifier" }
-	var isChildPane: Bool { return specifierType == "PSChildPaneSpecifier" }
+	var isGroup: Bool { return specifierType?.contains("GroupSpecifier") ?? false }
+	var isChildPane: Bool { return specifierType?.contains("ChildPaneSpecifier") ?? false }
 
 	// Initialization
 	init(plistData: Dictionary<String, Any>) {
