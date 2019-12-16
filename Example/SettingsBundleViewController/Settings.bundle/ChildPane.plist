@@ -38,6 +38,28 @@
 				<string>blue</string>
 			</array>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSRadioGroupSpecifier</string>
+			<key>Title</key>
+			<string>Test Radio</string>
+			<key>FooterText</key>
+			<string>Test Radio Footer</string>
+			<key>Key</key>
+			<string>test_radiogroup</string>
+			<key>DefaultValue</key>
+			<string>0</string>
+			<key>Titles</key>
+			<array>
+				<string>Debug</string>
+				<string>Release</string>
+			</array>
+			<key>Values</key>
+			<array>
+				<string>0</string>
+				<string>1</string>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>

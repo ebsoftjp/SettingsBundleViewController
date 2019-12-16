@@ -90,7 +90,7 @@ public class SettingsViewController: UIViewController {
 			(NSDictionary(contentsOfFile: filePath)?["PreferenceSpecifiers"] as? NSArray)?.enumerated().forEach {
 				if let plistData = $0.element as? Dictionary<String, Any> {
 					let data = SettingsCellData(plistData: plistData)
-					if data.isGroup {
+					if data.isParent {
 						res.append(data)
 					} else {
 						if res.count == 0 {
@@ -123,23 +123,11 @@ public class SettingsViewController: UIViewController {
 				currentFileName = file
 				res = createData()
 			} else {
-				res = [SettingsCellData]()
-				if let key = data.key,
-					!key.isEmpty,
-					let titles = data.plistData["Titles"] as? Array<String>,
-					let values = data.plistData["Values"] as? Array<Any> {
-					res.append(SettingsCellData(plistData: [
-						"Type": "PSGroupSpecifier",
-					]))
-					for i in 0..<titles.count {
-						res[res.count - 1].childData.append(SettingsCellData(plistData: [
-							"Type": "PSMultiValueSpecifierSelector",
-							"Title": titles[i],
-							"Value": data.isDefaultValue(values[i]),
-							"Key": key,
-						]))
-					}
-				}
+				res.removeAll()
+				res.append(SettingsCellData(plistData: [
+					"Type": "PSGroupSpecifier",
+				]))
+				res[res.count - 1].appendChild(data)
 			}
 		}
 		return res

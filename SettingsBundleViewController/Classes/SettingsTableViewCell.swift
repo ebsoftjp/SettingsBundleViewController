@@ -76,6 +76,11 @@ class SettingsTableViewCell: UITableViewCell {
 		if data.specifierType == "PSMultiValueSpecifierSelector" {
 			accessoryType = (data.plistData["Value"] as? Bool ?? false) ? .checkmark : .none
 		}
+
+		// RadioGroup selector
+		if data.specifierType == "PSRadioGroupSpecifierSelector" {
+			accessoryType = (data.plistData["Value"] as? Bool ?? false) ? .checkmark : .none
+		}
 	}
 
 }

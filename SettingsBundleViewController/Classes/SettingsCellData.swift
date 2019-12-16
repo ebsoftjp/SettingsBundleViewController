@@ -20,6 +20,8 @@ struct SettingsCellData {
 	var headerTitle: String? { return title }
 	var footerTitle: String? { return plistData["FooterText"] as? String }
 	var isGroup: Bool { return specifierType?.contains("GroupSpecifier") ?? false }
+	var isRadio: Bool { return specifierType?.contains("RadioGroupSpecifier") ?? false }
+	var isParent: Bool { return isGroup || isRadio }
 	var isChildPane: Bool { return specifierType?.contains("ChildPaneSpecifier") ?? false }
 	var isMultiValue: Bool { return specifierType == "PSMultiValueSpecifier" }
 	var isPush: Bool { return isChildPane || isMultiValue }
@@ -27,6 +29,25 @@ struct SettingsCellData {
 	// Initialization
 	init(plistData: Dictionary<String, Any>) {
 		self.plistData = plistData
+		if specifierType == "PSRadioGroupSpecifier" {
+			appendChild(self)
+		}
+	}
+
+	mutating func appendChild(_ parent: SettingsCellData) {
+		if let key = parent.key,
+			!key.isEmpty,
+			let titles = parent.plistData["Titles"] as? Array<String>,
+			let values = parent.plistData["Values"] as? Array<Any> {
+			for i in 0..<titles.count {
+				childData.append(SettingsCellData(plistData: [
+					"Type": "PSRadioGroupSpecifierSelector",
+					"Title": titles[i],
+					"Value": parent.isDefaultValue(values[i]),
+					"Key": key,
+				]))
+			}
+		}
 	}
 
 	func isDefaultValue(_ value: Any) -> Bool {
