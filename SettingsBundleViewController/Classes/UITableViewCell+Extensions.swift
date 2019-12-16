@@ -21,12 +21,22 @@ extension UITableViewCell {
 		return nil
 	}
 
-	convenience init(data: SettingsCellData, reuseIdentifier: String?) {
+	convenience init(text: String, data: SettingsCellData, reuseIdentifier: String?) {
 		self.init(style: .value1, reuseIdentifier: reuseIdentifier)
 
+		// AccessoryType
+		accessoryType = data.isChildPane ? .disclosureIndicator : .none
+
+		// Label
+		textLabel?.text = text
+		textLabel?.numberOfLines = 16
+
+		// Switch
 		if data.specifierType == "PSToggleSwitchSpecifier" {
 			accessoryView = UISwitch()
 		}
+
+		// Slider
 		if data.specifierType == "PSSliderSpecifier" {
 			let slider = UISlider()
 			addSubview(slider)
@@ -36,7 +46,7 @@ extension UITableViewCell {
 			slider.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 			for attr in [.leading: .leadingMargin, .trailing: .trailingMargin, .centerY: .centerY]
 				as [NSLayoutConstraint.Attribute: NSLayoutConstraint.Attribute] {
-				self.addConstraint(
+				addConstraint(
 					NSLayoutConstraint(
 						item: slider,
 						attribute: attr.key,
@@ -46,6 +56,15 @@ extension UITableViewCell {
 						multiplier: 1,
 						constant: 0))
 			}
+		}
+
+		// TextField
+		if data.specifierType == "PSTextFieldSpecifier" {
+			var r = bounds
+			r.size.width = r.width * 2 / 3
+			let textField = UITextField(frame: r)
+			textField.font = .preferredFont(forTextStyle: .body)
+			accessoryView = textField
 		}
 	}
 

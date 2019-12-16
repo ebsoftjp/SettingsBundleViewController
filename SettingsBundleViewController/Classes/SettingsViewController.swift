@@ -38,7 +38,7 @@ public class SettingsViewController: UIViewController {
 
 		// Close button
 		if splitMaster {
-			let closeButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: nil, action: nil)
+			let closeButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(closeViewController))
 			navigationItem.leftBarButtonItem = closeButton
 		}
 
@@ -105,6 +105,11 @@ public class SettingsViewController: UIViewController {
 			comment: text)
 	}
 
+	// Close
+	@objc func closeViewController() {
+		dismiss(animated: true, completion: nil)
+	}
+
 }
 
 // MARK: - UITableViewDelegate
@@ -150,10 +155,10 @@ extension SettingsViewController: UITableViewDataSource {
 		let reuseIdentifier = data.specifierType ?? "Cell"
 		var cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier)
 		if cell == nil {
-			cell = UITableViewCell(data: data, reuseIdentifier: reuseIdentifier)
+			cell = UITableViewCell(text: localized(data.title) ?? "",
+								   data: data,
+								   reuseIdentifier: reuseIdentifier)
 		}
-		cell!.textLabel?.text = localized(data.title)
-		cell!.accessoryType = data.isChildPane ? .disclosureIndicator : .none
 		return cell!
 	}
 
