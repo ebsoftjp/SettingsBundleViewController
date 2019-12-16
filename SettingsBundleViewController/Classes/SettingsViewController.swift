@@ -14,17 +14,19 @@ public class SettingsViewController: UIViewController {
 	private var bundleFileName: String!
 	private var currentFileName: String!
 	private var fileName: String { return currentFileName ?? "Root" }
-	private var cellArray = [SettingsCellData]()
+	private var selectedIndexPath: IndexPath?
+	private var cellArray: [SettingsCellData]?
 
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	public init(splitMaster: Bool, bundleFileName: String, fileName: String? = nil) {
+	public init(splitMaster: Bool, bundleFileName: String, fileName: String? = nil, indexPath: IndexPath? = nil) {
 		super.init(nibName: nil, bundle: nil)
 		self.splitMaster = splitMaster
 		self.bundleFileName = bundleFileName
 		self.currentFileName = fileName
+		self.selectedIndexPath = indexPath
 	}
 
 	override public func viewDidLoad() {
@@ -43,21 +45,7 @@ public class SettingsViewController: UIViewController {
 		}
 
 		// Create cell data
-		if let filePath = Bundle.main.path(forResource: bundleFileName + "/" + fileName, ofType: "plist") {
-			(NSDictionary(contentsOfFile: filePath)?["PreferenceSpecifiers"] as? NSArray)?.enumerated().forEach {
-				if let plistData = $0.element as? Dictionary<String, Any> {
-					let data = SettingsCellData(plistData: plistData)
-					if data.isGroup {
-						cellArray.append(data)
-					} else {
-						if cellArray.count == 0 {
-							cellArray.append(SettingsCellData(plistData: ["Type": "PSGroupSpecifier"]))
-						}
-						cellArray[cellArray.count - 1].childData.append(data)
-					}
-				}
-			}
-		}
+		cellArray = createData()
 
 		// Create table view
 		let tableView = UITableView(frame: .zero, style: .grouped)
@@ -92,6 +80,68 @@ public class SettingsViewController: UIViewController {
 		}
 	}
 
+	// Create cell data
+	func createData() -> [SettingsCellData] {
+		var res = [SettingsCellData]()
+		if let filePath = Bundle.main.path(forResource: bundleFileName + "/" + fileName, ofType: "plist") {
+			(NSDictionary(contentsOfFile: filePath)?["PreferenceSpecifiers"] as? NSArray)?.enumerated().forEach {
+				if let plistData = $0.element as? Dictionary<String, Any> {
+					let data = SettingsCellData(plistData: plistData)
+					if data.isGroup {
+						res.append(data)
+					} else {
+						if res.count == 0 {
+							res.append(SettingsCellData(plistData: [
+								"Type": "PSGroupSpecifier",
+							]))
+						}
+						res[res.count - 1].childData.append(data)
+					}
+				}
+			}
+		}
+		if !splitMaster, currentFileName == nil {
+			res.enumerated().forEach { section, data in
+				data.childData.enumerated().forEach { row, child in
+					if selectedIndexPath == nil, child.isPush {
+						selectedIndexPath = IndexPath(row: row, section: section)
+					}
+				}
+			}
+			if selectedIndexPath == nil {
+				res.removeAll()
+			}
+		}
+		if let indexPath = selectedIndexPath {
+			selectedIndexPath = nil
+			let data = res[indexPath.section].childData[indexPath.row]
+			title = localized(data.title)
+			if let file = data.file {
+				currentFileName = file
+				res = createData()
+			} else {
+				res = [SettingsCellData]()
+				if let key = data.key,
+					!key.isEmpty,
+					let titles = data.plistData["Titles"] as? Array<String>,
+					let values = data.plistData["Values"] as? Array<Any> {
+					res.append(SettingsCellData(plistData: [
+						"Type": "PSGroupSpecifier",
+					]))
+					for i in 0..<titles.count {
+						res[res.count - 1].childData.append(SettingsCellData(plistData: [
+							"Type": "PSMultiValueSpecifierSelector",
+							"Title": titles[i],
+							"Value": data.isDefaultValue(values[i]),
+							"Key": key,
+						]))
+					}
+				}
+			}
+		}
+		return res
+	}
+
 	// Localized text from Settings.bundle
 	func localized(_ text: String?) -> String? {
 		guard let text = text else {
@@ -117,9 +167,8 @@ extension SettingsViewController: UITableViewDelegate {
 
 	// Did select
 	public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let data = cellArray[indexPath.section].childData[indexPath.row]
-		if data.isChildPane {
-			let viewController = SettingsViewController(splitMaster: false, bundleFileName: bundleFileName, fileName: data.file)
+		if cellArray?[indexPath.section].childData[indexPath.row].isPush ?? false {
+			let viewController = SettingsViewController(splitMaster: false, bundleFileName: bundleFileName, fileName: fileName, indexPath: indexPath)
 			navigationController?.pushViewController(viewController, animated: true)
 		} else {
 			tableView.deselectRow(at: indexPath, animated: true)
@@ -128,12 +177,12 @@ extension SettingsViewController: UITableViewDelegate {
 
 	// Header title
 	public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		return localized(cellArray[section].headerTitle)
+		return localized(cellArray?[section].headerTitle)
 	}
 
 	// Footer title
 	public func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-		return localized(cellArray[section].footerTitle)
+		return localized(cellArray?[section].footerTitle)
 	}
 
 }
@@ -142,23 +191,29 @@ extension SettingsViewController: UITableViewDelegate {
 extension SettingsViewController: UITableViewDataSource {
 
 	public func numberOfSections(in tableView: UITableView) -> Int {
-		return cellArray.count
+		return cellArray?.count ?? 0
 	}
 
 	public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return cellArray[section].childData.count
+		return cellArray?[section].childData.count ?? 0
 	}
 
 	// Create cell
 	public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let data = cellArray[indexPath.section].childData[indexPath.row]
-		let reuseIdentifier = data.specifierType ?? "Cell"
+		let data = cellArray?[indexPath.section].childData[indexPath.row]
+		let reuseIdentifier = data?.specifierType ?? "Cell"
+
 		var cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier)
 		if cell == nil {
-			cell = UITableViewCell(text: localized(data.title) ?? "",
-								   data: data,
-								   reuseIdentifier: reuseIdentifier)
+			cell = SettingsTableViewCell(reuseIdentifier: reuseIdentifier)
 		}
+
+		if let data = data {
+			(cell as? SettingsTableViewCell)?.updateContext(text: localized(data.title) ?? "", data: data)
+		} else {
+			cell?.textLabel?.text = "Undefined specifierType"
+		}
+
 		return cell!
 	}
 

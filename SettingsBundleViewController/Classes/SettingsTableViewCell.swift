@@ -1,5 +1,5 @@
 //
-//  UITableViewCell+Extensions.swift
+//  SettingsTableViewCell.swift
 //  SettingsBundleViewController
 //
 //  Created by Mamoru Sugihara on 2019/12/13.
@@ -8,22 +8,13 @@
 
 import UIKit
 
-extension UITableViewCell {
+class SettingsTableViewCell: UITableViewCell {
 
-	var tableView: UITableView? {
-		var view: UIView? = self
-		while view != nil {
-			if let view = view as? UITableView {
-				return view
-			}
-			view = view?.superview
-		}
-		return nil
+	convenience init(reuseIdentifier: String?) {
+		self.init(style: .value1, reuseIdentifier: reuseIdentifier)
 	}
 
-	convenience init(text: String, data: SettingsCellData, reuseIdentifier: String?) {
-		self.init(style: .value1, reuseIdentifier: reuseIdentifier)
-
+	func updateContext(text: String, data: SettingsCellData) {
 		// AccessoryType
 		accessoryType = data.isChildPane ? .disclosureIndicator : .none
 
@@ -38,7 +29,10 @@ extension UITableViewCell {
 
 		// Slider
 		if data.specifierType == "PSSliderSpecifier" {
+			textLabel?.text = " "
+
 			let slider = UISlider()
+			slider.backgroundColor = .clear
 			addSubview(slider)
 
 			// Add constraint to slider
@@ -65,6 +59,17 @@ extension UITableViewCell {
 			let textField = UITextField(frame: r)
 			textField.font = .preferredFont(forTextStyle: .body)
 			accessoryView = textField
+		}
+
+		// MultiValue
+		if data.specifierType == "PSMultiValueSpecifier" {
+			detailTextLabel?.text = data.defaultValue as? String
+			accessoryType = .disclosureIndicator
+		}
+
+		// MultiValue selector
+		if data.specifierType == "PSMultiValueSpecifierSelector" {
+			accessoryType = (data.plistData["Value"] as? Bool ?? false) ? .checkmark : .none
 		}
 	}
 
