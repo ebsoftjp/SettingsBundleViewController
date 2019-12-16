@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import QuickLook
 
 public class SettingsViewController: UIViewController {
 
@@ -16,6 +17,8 @@ public class SettingsViewController: UIViewController {
 	private var fileName: String { return currentFileName ?? "Root" }
 	private var selectedIndexPath: IndexPath?
 	private var cellArray: [SettingsCellData]?
+	private let settingsTitle = Bundle(for: QLPreviewController.self)
+		.localizedString(forKey: "Settings", value: "Settings", table: nil)
 
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
@@ -33,7 +36,7 @@ public class SettingsViewController: UIViewController {
 		super.viewDidLoad()
 
 		// Title
-		title = bundleFileName
+		title = settingsTitle
 
 		// View
 		view.backgroundColor = .clear

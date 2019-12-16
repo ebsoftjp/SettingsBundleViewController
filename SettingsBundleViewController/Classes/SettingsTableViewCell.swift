@@ -61,6 +61,11 @@ class SettingsTableViewCell: UITableViewCell {
 			accessoryView = textField
 		}
 
+		// TitleValue
+		if data.specifierType == "PSTitleValueSpecifier" {
+			detailTextLabel?.text = data.defaultValue as? String
+		}
+
 		// MultiValue
 		if data.specifierType == "PSMultiValueSpecifier" {
 			detailTextLabel?.text = data.defaultValue as? String
