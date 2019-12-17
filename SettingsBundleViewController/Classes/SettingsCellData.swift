@@ -23,6 +23,8 @@ struct SettingsCellData {
 	var isChildPane: Bool { return specifierType?.contains("ChildPaneSpecifier") ?? false }
 	var isMultiValue: Bool { return specifierType == "PSMultiValueSpecifier" }
 	var isPush: Bool { return isChildPane || isMultiValue }
+	var isSelectable: Bool { return isPush
+		|| specifierType == "PSMultiValueSelectorSpecifier" }
 
 	// Initialization
 	init(plistData: Dictionary<String, Any>) {
@@ -61,6 +63,26 @@ struct SettingsCellData {
 			return titles[index]
 		}
 		return value as? String
+	}
+	
+	// Bool from value
+	func bool<T: Equatable>(fromValue value: T?) -> Bool {
+		if let value = value {
+			if plistData.keys.contains("TrueValue"),
+				value == (plistData["TrueValue"] as? T) {
+				return true
+			} else if plistData.keys.contains("FalseValue"),
+				value == (plistData["FalseValue"] as? T) {
+				return false
+			}
+		}
+		return value as? Bool ?? false
+	}
+
+	// Value from bool
+	func value(fromBool b: Bool) -> Any {
+		let key = b ? "TrueValue" : "FalseValue"
+		return plistData.keys.contains(key) ? plistData[key]! : b
 	}
 
 	// Selected

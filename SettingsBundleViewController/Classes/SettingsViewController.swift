@@ -32,7 +32,7 @@ public class SettingsViewController: UIViewController {
 		self.selectedIndexPath = indexPath
 	}
 
-	override public func viewDidLoad() {
+	public override func viewDidLoad() {
 		super.viewDidLoad()
 
 		// Title
@@ -72,7 +72,7 @@ public class SettingsViewController: UIViewController {
 		}
 	}
 
-	override public func viewWillAppear(_ animated: Bool) {
+	public override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
 		// Deselect selected cell
@@ -155,6 +155,12 @@ public class SettingsViewController: UIViewController {
 
 // MARK: - UITableViewDelegate
 extension SettingsViewController: UITableViewDelegate {
+
+	// Will select
+	public func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+		return cellArray?[indexPath.section].childData[indexPath.row].isSelectable
+			?? false
+	}
 
 	// Did select
 	public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

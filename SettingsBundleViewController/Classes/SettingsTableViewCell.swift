@@ -38,16 +38,19 @@ class SettingsTableViewCell: UITableViewCell {
 			view.isOn = UserDefaults.standard.bool(forKey: data.key!)
 			accessoryView = view
 
-			UserDefaults.standard.rx.observe(Bool.self, data.key!)
-				.subscribe(onNext: { b in
-					view.setOn(b ?? false, animated: true)
+			UserDefaults.standard.rx.observe(AnyHashable.self, data.key!)
+				.subscribe(onNext: { value in
+					let b = data.bool(fromValue: value)
+					if view.isOn != b {
+						view.setOn(b, animated: true)
+					}
 				})
 				.disposed(by: disposeBag)
 
 			view.rx.controlEvent(.valueChanged)
 				.withLatestFrom(view.rx.value)
 				.subscribe(onNext: {
-					UserDefaults.standard.set($0, forKey: data.key!)
+					UserDefaults.standard.set(data.value(fromBool: $0), forKey: data.key!)
 				})
 				.disposed(by: disposeBag)
 		}
