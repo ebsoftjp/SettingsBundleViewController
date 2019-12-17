@@ -16,6 +16,7 @@ public class SettingsViewController: UIViewController {
 	private var currentFileName: String!
 	private var fileName: String { return currentFileName ?? "Root" }
 	private var selectedIndexPath: IndexPath?
+	private var orgSelectedIndexPath: IndexPath?
 	private var cellArray: [SettingsCellData]?
 	private let settingsTitle = Bundle(for: QLPreviewController.self)
 		.localizedString(forKey: "Settings", value: "Settings", table: nil)
@@ -79,6 +80,10 @@ public class SettingsViewController: UIViewController {
 		view.subviews.compactMap { $0 as? UITableView }.forEach {
 			if let indexPath = $0.indexPathForSelectedRow {
 				$0.deselectRow(at: indexPath, animated: true)
+			} else if splitMaster,
+				!(splitViewController?.isCollapsed ?? false),
+				let indexPath = orgSelectedIndexPath {
+				$0.selectRow(at: indexPath, animated: false, scrollPosition: .none)
 			}
 		}
 	}
@@ -103,16 +108,18 @@ public class SettingsViewController: UIViewController {
 				}
 			}
 		}
-		if !splitMaster, currentFileName == nil {
-			res.enumerated().forEach { section, data in
-				data.childData.enumerated().forEach { row, child in
-					if selectedIndexPath == nil, child.isPush {
-						selectedIndexPath = IndexPath(row: row, section: section)
-					}
+		res.enumerated().forEach { section, data in
+			data.childData.enumerated().forEach { row, child in
+				if orgSelectedIndexPath == nil, child.isPush {
+					orgSelectedIndexPath = IndexPath(row: row, section: section)
 				}
 			}
-			if selectedIndexPath == nil {
+		}
+		if !splitMaster, currentFileName == nil {
+			if orgSelectedIndexPath == nil {
 				res.removeAll()
+			} else {
+				selectedIndexPath = orgSelectedIndexPath
 			}
 		}
 		if let indexPath = selectedIndexPath {
@@ -131,6 +138,16 @@ public class SettingsViewController: UIViewController {
 			}
 		}
 		return res
+	}
+
+	// Reset for detail view controller
+	public func reset(fileName: String, indexPath: IndexPath) {
+		currentFileName = fileName
+		selectedIndexPath = indexPath
+		cellArray = createData()
+		view.subviews.compactMap { $0 as? UITableView }.forEach {
+			$0.reloadData()
+		}
 	}
 
 	// Localized text from Settings.bundle
@@ -166,8 +183,20 @@ extension SettingsViewController: UITableViewDelegate {
 	public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if let data = cellArray?[indexPath.section].childData[indexPath.row] {
 			if data.isPush {
-				let viewController = SettingsViewController(splitMaster: false, bundleFileName: bundleFileName, fileName: fileName, indexPath: indexPath)
-				navigationController?.pushViewController(viewController, animated: true)
+				if splitMaster, !(splitViewController?.isCollapsed ?? false) {
+					let navigationController = splitViewController?.viewControllers.last as? UINavigationController
+					if indexPath == orgSelectedIndexPath {
+						navigationController?.popViewController(animated: true)
+					} else {
+						orgSelectedIndexPath = indexPath
+						navigationController?.popToRootViewController(animated: false)
+						let viewController = navigationController?.topViewController as? SettingsViewController
+						viewController?.reset(fileName: fileName, indexPath: indexPath)
+					}
+				} else {
+					let viewController = SettingsViewController(splitMaster: false, bundleFileName: bundleFileName, fileName: fileName, indexPath: indexPath)
+					navigationController?.pushViewController(viewController, animated: true)
+				}
 			} else {
 				data.selected()
 				tableView.deselectRow(at: indexPath, animated: true)
