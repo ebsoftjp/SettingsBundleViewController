@@ -40,6 +40,22 @@
 		</dict>
 		<dict>
 			<key>Type</key>
+			<string>PSSliderSpecifier</string>
+			<key>Key</key>
+			<string>test_slider</string>
+			<key>DefaultValue</key>
+			<integer>2</integer>
+			<key>MinimumValue</key>
+			<real>1.5</real>
+			<key>MaximumValue</key>
+			<real>4.5</real>
+			<key>MinimumValueImage</key>
+			<string></string>
+			<key>MaximumValueImage</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSRadioGroupSpecifier</string>
 			<key>Title</key>
 			<string>Test Radio</string>

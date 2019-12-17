@@ -58,6 +58,8 @@ class SettingsTableViewCell: UITableViewCell {
 
 			let view = UISlider()
 			view.backgroundColor = .clear
+			view.minimumValue = data.plistData["MinimumValue"] as? Float ?? 0
+			view.maximumValue = data.plistData["MaximumValue"] as? Float ?? 1
 			addSubview(view)
 
 			// Add constraint to slider
