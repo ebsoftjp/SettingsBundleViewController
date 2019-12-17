@@ -20,8 +20,6 @@ struct SettingsCellData {
 	var headerTitle: String? { return title }
 	var footerTitle: String? { return plistData["FooterText"] as? String }
 	var isGroup: Bool { return specifierType?.contains("GroupSpecifier") ?? false }
-	var isRadio: Bool { return specifierType?.contains("RadioGroupSpecifier") ?? false }
-	var isParent: Bool { return isGroup || isRadio }
 	var isChildPane: Bool { return specifierType?.contains("ChildPaneSpecifier") ?? false }
 	var isMultiValue: Bool { return specifierType == "PSMultiValueSpecifier" }
 	var isPush: Bool { return isChildPane || isMultiValue }
@@ -30,32 +28,56 @@ struct SettingsCellData {
 	init(plistData: Dictionary<String, Any>) {
 		self.plistData = plistData
 		if specifierType == "PSRadioGroupSpecifier" {
+			// Use PSMultiValueSelectorSpecifier
 			appendChild(self)
 		}
 	}
 
+	// Add child for MultiValue and RadioGroup
 	mutating func appendChild(_ parent: SettingsCellData) {
 		if let key = parent.key,
 			!key.isEmpty,
-			let titles = parent.plistData["Titles"] as? Array<String>,
-			let values = parent.plistData["Values"] as? Array<Any> {
+			let defaultValue = parent.defaultValue,
+			let titles = parent.plistData["Titles"] as? [String],
+			let values = parent.plistData["Values"] as? [Any] {
 			for i in 0..<titles.count {
 				childData.append(SettingsCellData(plistData: [
-					"Type": "PSRadioGroupSpecifierSelector",
+					"Type": "PSMultiValueSelectorSpecifier",
 					"Title": titles[i],
-					"Value": parent.isDefaultValue(values[i]),
+					"Value": values[i],
 					"Key": key,
+					"DefaultValue": defaultValue,
 				]))
 			}
 		}
 	}
 
-	func isDefaultValue(_ value: Any) -> Bool {
-		if let v1 = value as? String, let v2 = defaultValue as? String {
-			return v1 == v2
-		} else if let v1 = value as? Int, let v2 = defaultValue as? Int {
-				return v1 == v2
+	// Title from value
+	func title<T: Equatable>(fromValue value: T?) -> String? {
+		if let value = value,
+			let titles = plistData["Titles"] as? [String],
+			let values = plistData["Values"] as? [T],
+			let index = values.firstIndex(of: value) {
+			return titles[index]
 		}
-		return false
+		return value as? String
 	}
+
+	// Selected
+	func selected() {
+		if let key = key, !key.isEmpty, let value = plistData["Value"] {
+			if specifierType == "PSMultiValueSelectorSpecifier" {
+				UserDefaults.standard.set(value, forKey: key)
+			}
+		}
+	}
+
+	// Equal
+	func isEqualValue<T: Equatable>(_ newValue: T?) -> Bool {
+		guard let v1 = newValue, let v2 = plistData["Value"] as? T else {
+			return false
+		}
+		return v1 == v2
+	}
+
 }

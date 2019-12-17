@@ -1,7 +1,10 @@
+platform :ios, '8.0'
 use_frameworks!
 
 target 'SettingsBundleViewController_Example' do
   pod 'SettingsBundleViewController', :path => '../'
+  pod 'RxSwift'
+  pod 'RxCocoa'
 
   target 'SettingsBundleViewController_Tests' do
     inherit! :search_paths

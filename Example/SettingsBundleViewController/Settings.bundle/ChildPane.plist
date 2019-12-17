@@ -60,6 +60,32 @@
 				<string>1</string>
 			</array>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>Test TitleValue</string>
+			<key>Key</key>
+			<string>test_titlevalue</string>
+			<key>DefaultValue</key>
+			<integer>1</integer>
+			<key>Titles</key>
+			<array>
+				<string>(1)</string>
+				<string>(2)</string>
+				<string>(3)</string>
+			</array>
+			<key>Values</key>
+			<array>
+				<integer>0</integer>
+				<integer>1</integer>
+				<integer>2</integer>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>

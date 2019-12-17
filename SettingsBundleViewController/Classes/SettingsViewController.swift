@@ -90,7 +90,7 @@ public class SettingsViewController: UIViewController {
 			(NSDictionary(contentsOfFile: filePath)?["PreferenceSpecifiers"] as? NSArray)?.enumerated().forEach {
 				if let plistData = $0.element as? Dictionary<String, Any> {
 					let data = SettingsCellData(plistData: plistData)
-					if data.isParent {
+					if data.isGroup {
 						res.append(data)
 					} else {
 						if res.count == 0 {
@@ -158,11 +158,14 @@ extension SettingsViewController: UITableViewDelegate {
 
 	// Did select
 	public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		if cellArray?[indexPath.section].childData[indexPath.row].isPush ?? false {
-			let viewController = SettingsViewController(splitMaster: false, bundleFileName: bundleFileName, fileName: fileName, indexPath: indexPath)
-			navigationController?.pushViewController(viewController, animated: true)
-		} else {
-			tableView.deselectRow(at: indexPath, animated: true)
+		if let data = cellArray?[indexPath.section].childData[indexPath.row] {
+			if data.isPush {
+				let viewController = SettingsViewController(splitMaster: false, bundleFileName: bundleFileName, fileName: fileName, indexPath: indexPath)
+				navigationController?.pushViewController(viewController, animated: true)
+			} else {
+				data.selected()
+				tableView.deselectRow(at: indexPath, animated: true)
+			}
 		}
 	}
 

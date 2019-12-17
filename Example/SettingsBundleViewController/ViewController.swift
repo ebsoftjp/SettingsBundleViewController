@@ -19,7 +19,7 @@ class ViewController: UIViewController {
 		UserDefaults.standard.register(defaults: defaults)
 		print("========")
 		defaults.forEach {
-			print("\($0.key): \($0.value)")
+			print("\($0.key): \(UserDefaults.standard.value(forKey: $0.key)!) (\($0.value))")
 		}
 		print("========")
 	}
