@@ -15,7 +15,8 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
 
-		let defaults = SettingsBundleViewController.defaults()
+		SettingsBundleViewController.settingsViewControllerType = SettingsViewControllerCustom.self
+		let defaults = SettingsBundleViewController.defaults
 		UserDefaults.standard.register(defaults: defaults)
 		print("========")
 		defaults.forEach {
@@ -24,7 +25,12 @@ class ViewController: UIViewController {
 		print("========")
 	}
 
-    override func didReceiveMemoryWarning() {
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		openSettings(0)
+	}
+
+	override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
@@ -36,3 +42,16 @@ class ViewController: UIViewController {
 
 }
 
+// MARK: - Custom class of SettingsViewController
+class SettingsViewControllerCustom: SettingsViewController {
+
+	func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+		// Display header title including lowercase letters
+		(view as? UITableViewHeaderFooterView)?.textLabel?.text = cellArray?[section].headerTitle
+	}
+
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		super.tableView(tableView, didSelectRowAt: indexPath)
+	}
+
+}

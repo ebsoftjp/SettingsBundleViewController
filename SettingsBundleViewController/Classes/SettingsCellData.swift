@@ -6,7 +6,7 @@
 //  Copyright (c) 2019 Mamoru Sugihara. All rights reserved.
 //
 
-struct SettingsCellData {
+public struct SettingsCellData {
 
 	let plistData: Dictionary<String, Any>
 	var childData = [SettingsCellData]()
@@ -17,7 +17,7 @@ struct SettingsCellData {
 	var defaultValue: Any? { return plistData["DefaultValue"] }
 	var file: String? { return plistData["File"] as? String }
 
-	var headerTitle: String? { return title }
+	public var headerTitle: String? { return title }
 	var footerTitle: String? { return plistData["FooterText"] as? String }
 	var isGroup: Bool { return specifierType?.contains("GroupSpecifier") ?? false }
 	var isChildPane: Bool { return specifierType?.contains("ChildPaneSpecifier") ?? false }

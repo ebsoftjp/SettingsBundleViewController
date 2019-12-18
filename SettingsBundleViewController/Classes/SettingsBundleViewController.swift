@@ -8,33 +8,14 @@
 
 import UIKit
 
-public class SettingsBundleViewController: UISplitViewController {
+open class SettingsBundleViewController: UISplitViewController {
 
 	// Use bundle filename
-	static var currentBundleFileName: String?
-	static var bundleFileName: String { return currentBundleFileName ?? "Settings.bundle" }
-
-	required init?(coder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
-
-	// initialize with filename
-	public init() {
-		super.init(nibName: nil, bundle: nil)
-
-		// Add master and detail view controller
-		viewControllers = [true, false].map {
-			let viewController = SettingsViewController(splitMaster: $0, bundleFileName: SettingsBundleViewController.bundleFileName)
-			return UINavigationController(rootViewController: viewController)
-		}
-
-		preferredDisplayMode = .allVisible
-		delegate = self
-	}
+	public static var bundleFileName = "Settings.bundle"
+	public static var settingsViewControllerType: SettingsViewController.Type = SettingsViewController.self
 
 	// Get default value in UserDefaults
-	public static func defaults(fileName: String? = nil) -> [String: Any] {
-		currentBundleFileName = fileName
+	public static var defaults: [String: Any] {
 		var res = [String: Any]()
 		Bundle.main.urls(forResourcesWithExtension: "plist", subdirectory: bundleFileName)?.forEach {
 			let plistData = NSDictionary(contentsOf: $0)
@@ -47,6 +28,22 @@ public class SettingsBundleViewController: UISplitViewController {
 			}
 		}
 		return res
+	}
+
+	open override func viewDidLoad() {
+		super.viewDidLoad()
+
+		preferredDisplayMode = .allVisible
+		delegate = self
+
+		// Add master and detail view controller
+		if viewControllers.count == 0 {
+			viewControllers = [true, false].map {
+				let viewController = type(of: self).settingsViewControllerType.init()
+				viewController.reset(splitMaster: $0, bundleFileName: type(of: self).bundleFileName)
+				return UINavigationController(rootViewController: viewController)
+			}
+		}
 	}
 
 }
