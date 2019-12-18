@@ -15,3 +15,9 @@ target 'SettingsBundleViewController_Example' do
     pod 'Nimble-Snapshots' , '~> 6.3.0'
   end
 end
+
+post_install do | installer |
+  require 'fileutils'
+
+  FileUtils.cp_r('Pods/Target Support Files/Pods-SettingsBundleViewController_Example/Pods-SettingsBundleViewController_Example-acknowledgements.plist', 'SettingsBundleViewController/Settings.bundle/Acknowledgements.plist', :remove_destination => true)
+end
