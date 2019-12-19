@@ -54,4 +54,21 @@ class SettingsViewControllerCustom: SettingsViewController {
 		super.tableView(tableView, didSelectRowAt: indexPath)
 	}
 
+	override func updateCellContent(_ cell: SettingsTableViewCell, _ data: SettingsCellData) {
+		switch data.specifierType {
+		// Button
+		case "PSButtonSpecifier":
+			cell.textLabel?.text = localized(data.title)
+			cell.didSelectHandler = { tableView, indexPath in
+				let alert = UIAlertController(title: nil, message: data.title, preferredStyle: .alert)
+				alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+					tableView.deselectRow(at: indexPath, animated: true)
+				}))
+				self.present(alert, animated: true, completion: nil)
+			}
+		default:
+			super.updateCellContent(cell, data)
+		}
+	}
+
 }

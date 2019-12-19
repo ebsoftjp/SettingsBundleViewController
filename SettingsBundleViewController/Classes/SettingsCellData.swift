@@ -8,31 +8,27 @@
 
 public struct SettingsCellData {
 
-	let plistData: Dictionary<String, Any>
-	var childData = [SettingsCellData]()
+	public let plistData: Dictionary<String, Any>
+	public var childData = [SettingsCellData]()
 
-	var specifierType: String? { return plistData["Type"] as? String }
-	var title: String? { return plistData["Title"] as? String }
-	var key: String? { return plistData["Key"] as? String }
-	var defaultValue: Any? { return plistData["DefaultValue"] }
-	var file: String? { return plistData["File"] as? String }
+	public var specifierType: String? { return plistData["Type"] as? String }
+	public var title: String? { return plistData["Title"] as? String }
+	public var key: String? { return plistData["Key"] as? String }
+	public var defaultValue: Any? { return plistData["DefaultValue"] }
+	public var file: String? { return plistData["File"] as? String }
 
 	public var headerTitle: String? { return title }
-	var footerTitle: String? { return plistData["FooterText"] as? String }
-	var isGroup: Bool { return specifierType?.contains("GroupSpecifier") ?? false }
-	var isChildPane: Bool { return specifierType?.contains("ChildPaneSpecifier") ?? false }
-	var isMultiValue: Bool { return specifierType == "PSMultiValueSpecifier" }
-	var isPush: Bool { return isChildPane || isMultiValue }
-	var isSelectable: Bool { return isPush
+	public var footerTitle: String? { return plistData["FooterText"] as? String }
+	public var isGroup: Bool { return specifierType?.contains("GroupSpecifier") ?? false }
+	public var isChildPane: Bool { return specifierType?.contains("ChildPaneSpecifier") ?? false }
+	public var isMultiValue: Bool { return specifierType == "PSMultiValueSpecifier" }
+	public var isPush: Bool { return isChildPane || isMultiValue }
+	public var isSelectable: Bool { return isPush
 		|| specifierType == "PSMultiValueSelectorSpecifier" }
 
 	// Initialization
 	init(plistData: Dictionary<String, Any>) {
 		self.plistData = plistData
-		if specifierType == "PSRadioGroupSpecifier" {
-			// Use PSMultiValueSelectorSpecifier
-			appendChild(self)
-		}
 	}
 
 	// Add child for MultiValue and RadioGroup
@@ -83,15 +79,6 @@ public struct SettingsCellData {
 	func value(fromBool b: Bool) -> Any {
 		let key = b ? "TrueValue" : "FalseValue"
 		return plistData.keys.contains(key) ? plistData[key]! : b
-	}
-
-	// Selected
-	func selected() {
-		if let key = key, !key.isEmpty, let value = plistData["Value"] {
-			if specifierType == "PSMultiValueSelectorSpecifier" {
-				UserDefaults.standard.set(value, forKey: key)
-			}
-		}
 	}
 
 	// Equal

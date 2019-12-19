@@ -106,6 +106,18 @@
 				<integer>2</integer>
 			</array>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSButtonSpecifier</string>
+			<key>Title</key>
+			<string>Test Button 1</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSButtonSpecifier</string>
+			<key>Title</key>
+			<string>Test Button 2</string>
+		</dict>
 	</array>
 </dict>
 </plist>

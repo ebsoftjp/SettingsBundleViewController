@@ -96,8 +96,12 @@ open class SettingsViewController: UIViewController {
 		if let filePath = Bundle.main.path(forResource: bundleFileName + "/" + fileName, ofType: "plist") {
 			(NSDictionary(contentsOfFile: filePath)?["PreferenceSpecifiers"] as? NSArray)?.enumerated().forEach {
 				if let plistData = $0.element as? Dictionary<String, Any> {
-					let data = SettingsCellData(plistData: plistData)
+					var data = SettingsCellData(plistData: plistData)
 					if data.isGroup {
+						if data.specifierType == "PSRadioGroupSpecifier" {
+							// Use PSMultiValueSelectorSpecifier
+							data.appendChild(data)
+						}
 						res.append(data)
 					} else {
 						if res.count == 0 {
@@ -155,88 +159,61 @@ open class SettingsViewController: UIViewController {
 			comment: text)
 	}
 
+	// Show ChildPane
+	open func showChild(_ tableView: UITableView, _ indexPath: IndexPath) {
+		if splitMaster, !(splitViewController?.isCollapsed ?? false) {
+			// Master with detail view controller
+			let navigationController = splitViewController?.viewControllers.last as? UINavigationController
+			if indexPath == orgSelectedIndexPath {
+				navigationController?.popViewController(animated: true)
+			} else {
+				orgSelectedIndexPath = indexPath
+				navigationController?.popToRootViewController(animated: false)
+				let viewController = navigationController?.topViewController as? SettingsViewController
+				viewController?.reset(fileName: fileName, indexPath: indexPath)
+			}
+		} else {
+			let viewController = type(of: self).init()
+			viewController.reset(splitMaster: false, bundleFileName: bundleFileName, fileName: fileName, indexPath: indexPath)
+			navigationController?.pushViewController(viewController, animated: true)
+		}
+	}
+
 	// Close
 	@objc open func closeViewController() {
 		dismiss(animated: true, completion: nil)
 	}
-
-}
-
-// MARK: - UITableViewDelegate
-extension SettingsViewController: UITableViewDelegate {
-
-	// Will select
-	open func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-		return cellArray?[indexPath.section].childData[indexPath.row].isSelectable
-			?? false
-	}
-
-	// Did select
-	open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		if let data = cellArray?[indexPath.section].childData[indexPath.row] {
-			if data.isPush {
-				if splitMaster, !(splitViewController?.isCollapsed ?? false) {
-					let navigationController = splitViewController?.viewControllers.last as? UINavigationController
-					if indexPath == orgSelectedIndexPath {
-						navigationController?.popViewController(animated: true)
-					} else {
-						orgSelectedIndexPath = indexPath
-						navigationController?.popToRootViewController(animated: false)
-						let viewController = navigationController?.topViewController as? SettingsViewController
-						viewController?.reset(fileName: fileName, indexPath: indexPath)
-					}
-				} else {
-					let viewController = type(of: self).init()
-					viewController.reset(splitMaster: false, bundleFileName: bundleFileName, fileName: fileName, indexPath: indexPath)
-					navigationController?.pushViewController(viewController, animated: true)
-				}
-			} else {
-				data.selected()
-				tableView.deselectRow(at: indexPath, animated: true)
-			}
+	
+	open func createCell(_ reuseIdentifier: String) -> SettingsTableViewCell {
+		switch reuseIdentifier {
+		case "PSChildPaneSpecifier",
+			 "PSTitleValueSpecifier",
+			 "PSMultiValueSpecifier":
+			return SettingsTableViewCell(style: .value1, reuseIdentifier: reuseIdentifier)
+		default:
+			return SettingsTableViewCell(style: .default, reuseIdentifier: reuseIdentifier)
 		}
 	}
 
-	// Header title
-	open func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		return localized(cellArray?[section].headerTitle)
-	}
-
-	// Footer title
-	open func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-		return localized(cellArray?[section].footerTitle)
-	}
-
-}
-
-// MARK: - UITableViewDataSource
-extension SettingsViewController: UITableViewDataSource {
-
-	open func numberOfSections(in tableView: UITableView) -> Int {
-		return cellArray?.count ?? 0
-	}
-
-	open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return cellArray?[section].childData.count ?? 0
-	}
-
-	// Create cell
-	open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let data = cellArray?[indexPath.section].childData[indexPath.row]
-		let reuseIdentifier = data?.specifierType ?? "Cell"
-
-		var cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier)
-		if cell == nil {
-			cell = SettingsTableViewCell(reuseIdentifier: reuseIdentifier)
+	open func updateCellContent(_ cell: SettingsTableViewCell, _ data: SettingsCellData) {
+		switch data.specifierType {
+		case "PSChildPaneSpecifier":
+			updateCellChildPane(cell, data)
+		case "PSToggleSwitchSpecifier":
+			updateCellToggleSwitch(cell, data)
+		case "PSSliderSpecifier":
+			updateCellSlider(cell, data)
+		case "PSTextFieldSpecifier":
+			updateCellTextField(cell, data)
+		case "PSTitleValueSpecifier":
+			updateCellTitleValue(cell, data)
+		case "PSMultiValueSpecifier":
+			updateCellMultiValue(cell, data)
+		case "PSMultiValueSelectorSpecifier":
+			updateCellMultiValueSelector(cell, data)
+		default:
+			break
 		}
-
-		if let data = data {
-			(cell as? SettingsTableViewCell)?.updateContext(text: localized(data.title) ?? "", data: data)
-		} else {
-			cell?.textLabel?.text = "Undefined specifierType"
-		}
-
-		return cell!
 	}
 
 }
