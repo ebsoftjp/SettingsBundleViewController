@@ -16,15 +16,13 @@ public struct SettingsCellData {
 	public var key: String? { return plistData["Key"] as? String }
 	public var defaultValue: Any? { return plistData["DefaultValue"] }
 	public var file: String? { return plistData["File"] as? String }
+	public var headerText: String? { return title }
+	public var footerText: String? { return plistData["FooterText"] as? String }
 
-	public var headerTitle: String? { return title }
-	public var footerTitle: String? { return plistData["FooterText"] as? String }
 	public var isGroup: Bool { return specifierType?.contains("GroupSpecifier") ?? false }
 	public var isChildPane: Bool { return specifierType?.contains("ChildPaneSpecifier") ?? false }
-	public var isMultiValue: Bool { return specifierType == "PSMultiValueSpecifier" }
+	public var isMultiValue: Bool { return specifierType?.contains("MultiValueSpecifier") ?? false }
 	public var isPush: Bool { return isChildPane || isMultiValue }
-	public var isSelectable: Bool { return isPush
-		|| specifierType == "PSMultiValueSelectorSpecifier" }
 
 	// Initialization
 	init(plistData: Dictionary<String, Any>) {

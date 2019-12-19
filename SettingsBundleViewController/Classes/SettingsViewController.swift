@@ -203,10 +203,10 @@ open class SettingsViewController: UIViewController {
 			updateCellToggleSwitch(cell, data)
 		case "PSSliderSpecifier":
 			updateCellSlider(cell, data)
-		case "PSTextFieldSpecifier":
-			updateCellTextField(cell, data)
 		case "PSTitleValueSpecifier":
 			updateCellTitleValue(cell, data)
+		case "PSTextFieldSpecifier":
+			updateCellTextField(cell, data)
 		case "PSMultiValueSpecifier":
 			updateCellMultiValue(cell, data)
 		case "PSMultiValueSelectorSpecifier":

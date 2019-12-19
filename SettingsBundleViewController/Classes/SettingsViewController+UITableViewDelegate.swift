@@ -22,12 +22,12 @@ extension SettingsViewController: UITableViewDelegate {
 
 	// Header title
 	open func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		return localized(cellArray?[section].headerTitle)
+		return localized(cellArray?[section].headerText)
 	}
 
 	// Footer title
 	open func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-		return localized(cellArray?[section].footerTitle)
+		return localized(cellArray?[section].footerText)
 	}
 
 }

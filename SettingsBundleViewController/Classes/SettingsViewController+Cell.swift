@@ -91,6 +91,17 @@ public extension SettingsViewController {
 			})
 			.disposed(by: cell.disposeBag)
 	}
+	
+	// TitleValue
+	func updateCellTitleValue(_ cell: SettingsTableViewCell, _ data: SettingsCellData) {
+		cell.textLabel?.text = localized(data.title)
+
+		UserDefaults.standard.rx.observe(AnyHashable.self, data.key!)
+			.subscribe(onNext: { [weak self] value in
+				cell.detailTextLabel?.text = self?.localized(data.title(fromValue: value))
+			})
+			.disposed(by: cell.disposeBag)
+	}
 
 	// TextField
 	func updateCellTextField(_ cell: SettingsTableViewCell, _ data: SettingsCellData) {
@@ -123,42 +134,34 @@ public extension SettingsViewController {
 			.disposed(by: cell.disposeBag)
 	}
 
-	// TitleValue
-	func updateCellTitleValue(_ cell: SettingsTableViewCell, _ data: SettingsCellData) {
-		cell.textLabel?.text = localized(data.title)
-		UserDefaults.standard.rx.observe(AnyHashable.self, data.key!)
-			.subscribe(onNext: { value in
-				cell.detailTextLabel?.text = data.title(fromValue: value)
-			})
-			.disposed(by: cell.disposeBag)
-	}
-
 	// MultiValue
 	func updateCellMultiValue(_ cell: SettingsTableViewCell, _ data: SettingsCellData) {
 		cell.textLabel?.text = localized(data.title)
-		UserDefaults.standard.rx.observe(AnyHashable.self, data.key!)
-			.subscribe(onNext: { value in
-				cell.detailTextLabel?.text = data.title(fromValue: value)
-			})
-			.disposed(by: cell.disposeBag)
 		cell.accessoryType = .disclosureIndicator
 		cell.didSelectHandler = { tableView, indexPath in
 			self.showChild(tableView, indexPath)
 		}
+
+		UserDefaults.standard.rx.observe(AnyHashable.self, data.key!)
+			.subscribe(onNext: { [weak self] value in
+				cell.detailTextLabel?.text = self?.localized(data.title(fromValue: value))
+			})
+			.disposed(by: cell.disposeBag)
 	}
 
 	// MultiValue selector
 	func updateCellMultiValueSelector(_ cell: SettingsTableViewCell, _ data: SettingsCellData) {
 		cell.textLabel?.text = localized(data.title)
+		cell.didSelectHandler = { tableView, indexPath in
+			UserDefaults.standard.set(data.plistData["Value"], forKey: data.key!)
+			tableView.deselectRow(at: indexPath, animated: true)
+		}
+
 		UserDefaults.standard.rx.observe(String.self, data.key!)
 			.subscribe(onNext: { str in
 				cell.accessoryType = data.isEqualValue(str) ? .checkmark : .none
 			})
 			.disposed(by: cell.disposeBag)
-		cell.didSelectHandler = { tableView, indexPath in
-			UserDefaults.standard.set(data.plistData["Value"], forKey: data.key!)
-			tableView.deselectRow(at: indexPath, animated: true)
-		}
 	}
 
 }
