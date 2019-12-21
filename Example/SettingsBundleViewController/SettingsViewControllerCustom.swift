@@ -18,24 +18,12 @@ class SettingsViewControllerCustom: SettingsViewController {
 		(view as? UITableViewHeaderFooterView)?.textLabel?.text = cellArray?[section].headerText
 	}
 
-	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		super.tableView(tableView, didSelectRowAt: indexPath)
-	}
-
-	override func createCell(_ reuseIdentifier: String) -> SettingsTableViewCell {
-		switch reuseIdentifier {
-		case "PSProductButtonSpecifier":
-			return SettingsTableViewCell(style: .value1, reuseIdentifier: reuseIdentifier)
-		default:
-			return super.createCell(reuseIdentifier)
-		}
-	}
-
 	override func updateCellContent(_ cell: SettingsTableViewCell, _ data: SettingsCellData) {
+		super.updateCellContent(cell, data)
+
+		// Custom type
 		switch data.specifierType {
-		// Button
 		case "PSButtonSpecifier":
-			cell.textLabel?.text = localized(data.title)
 			cell.didSelectHandler = { tableView, indexPath in
 				let alert = UIAlertController(title: nil, message: data.title, preferredStyle: .alert)
 				alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
@@ -44,17 +32,14 @@ class SettingsViewControllerCustom: SettingsViewController {
 				self.present(alert, animated: true, completion: nil)
 			}
 
-		// ProductButton
 		case "PSProductButtonSpecifier":
-			cell.textLabel?.text = localized("Product 1")
-			cell.detailTextLabel?.text = localized("$0.99")
 			cell.didSelectHandler = { tableView, indexPath in
 				self.startIndicator()
 				Observable.just(0)
-					.delay(.milliseconds(3000), scheduler: MainScheduler.instance)
+					.delay(.milliseconds(1000), scheduler: MainScheduler.instance)
 					.subscribe(onNext: { _ in
 						self.stopIndicator()
-						let alert = UIAlertController(title: nil, message: data.title, preferredStyle: .alert)
+						let alert = UIAlertController(title: nil, message: data.string("ProductIdentifier"), preferredStyle: .alert)
 						alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
 							tableView.deselectRow(at: indexPath, animated: true)
 						}))
@@ -64,7 +49,7 @@ class SettingsViewControllerCustom: SettingsViewController {
 			}
 
 		default:
-			super.updateCellContent(cell, data)
+			break
 		}
 	}
 

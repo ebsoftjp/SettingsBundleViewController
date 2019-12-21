@@ -16,8 +16,11 @@ public struct SettingsCellData {
 	public var key: String? { return plistData["Key"] as? String }
 	public var defaultValue: Any? { return plistData["DefaultValue"] }
 	public var file: String? { return plistData["File"] as? String }
-	public var headerText: String? { return title }
-	public var footerText: String? { return plistData["FooterText"] as? String }
+
+	public var headerText: String? { return overwriteHeaderText ?? title }
+	public var footerText: String? { return overwriteFooterText ?? plistData["FooterText"] as? String }
+	public var overwriteHeaderText: String?
+	public var overwriteFooterText: String?
 
 	public var isGroup: Bool { return specifierType?.contains("GroupSpecifier") ?? false }
 	public var isChildPane: Bool { return specifierType?.contains("ChildPaneSpecifier") ?? false }
@@ -30,7 +33,7 @@ public struct SettingsCellData {
 	}
 
 	// Add child for MultiValue and RadioGroup
-	mutating func appendChild(_ parent: SettingsCellData) {
+	public mutating func appendChild(_ parent: SettingsCellData) {
 		if let key = parent.key,
 			!key.isEmpty,
 			let defaultValue = parent.defaultValue,
@@ -49,7 +52,7 @@ public struct SettingsCellData {
 	}
 
 	// Title from value
-	func title<T: Equatable>(fromValue value: T?) -> String? {
+	public func title<T: Equatable>(fromValue value: T?) -> String? {
 		if let value = value,
 			let titles = plistData["Titles"] as? [String],
 			let values = plistData["Values"] as? [T],
@@ -60,7 +63,7 @@ public struct SettingsCellData {
 	}
 	
 	// Bool from value
-	func bool<T: Equatable>(fromValue value: T?) -> Bool {
+	public func bool<T: Equatable>(fromValue value: T?) -> Bool {
 		if let value = value {
 			if plistData.keys.contains("TrueValue"),
 				value == (plistData["TrueValue"] as? T) {
@@ -74,17 +77,22 @@ public struct SettingsCellData {
 	}
 
 	// Value from bool
-	func value(fromBool b: Bool) -> Any {
+	public func value(fromBool b: Bool) -> Any {
 		let key = b ? "TrueValue" : "FalseValue"
 		return plistData.keys.contains(key) ? plistData[key]! : b
 	}
 
 	// Equal
-	func isEqualValue<T: Equatable>(_ newValue: T?) -> Bool {
+	public func isEqualValue<T: Equatable>(_ newValue: T?) -> Bool {
 		guard let v1 = newValue, let v2 = plistData["Value"] as? T else {
 			return false
 		}
 		return v1 == v2
+	}
+
+	// String from key
+	public func string(_ key: String) -> String? {
+		return plistData[key] as? String
 	}
 
 }

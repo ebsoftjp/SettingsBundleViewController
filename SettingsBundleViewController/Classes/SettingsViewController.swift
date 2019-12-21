@@ -7,7 +7,10 @@
 //
 
 import UIKit
+import StoreKit
 import QuickLook
+import RxSwift
+import RxCocoa
 
 open class SettingsViewController: UIViewController {
 
@@ -21,6 +24,8 @@ open class SettingsViewController: UIViewController {
 	open var cellArray: [SettingsCellData]?
 	open var titleText = Bundle(for: QLPreviewController.self)
 		.localizedString(forKey: "Settings", value: "Settings", table: nil)
+
+	open var products = BehaviorRelay<[SKProduct]?>(value: nil)
 
 	open var fadeDuration = 0.2
 	open var indicatorView: UIActivityIndicatorView?
@@ -77,6 +82,9 @@ open class SettingsViewController: UIViewController {
 					multiplier: 1,
 					constant: 0))
 		}
+
+		// Request products
+		startRequestProducts()
 	}
 
 	open override func viewWillAppear(_ animated: Bool) {
@@ -189,8 +197,13 @@ open class SettingsViewController: UIViewController {
 			return
 		}
 
+		indicatorView = UIActivityIndicatorView(style: .white)
+
 		DispatchQueue.main.async {
-			let indicatorView = UIActivityIndicatorView(style: .white)
+			guard let indicatorView = self.indicatorView else {
+				return
+			}
+
 			if #available(iOS 13.0, *) {
 				indicatorView.style = .medium
 				indicatorView.color = .white
@@ -198,7 +211,6 @@ open class SettingsViewController: UIViewController {
 			self.view.addSubview(indicatorView)
 			indicatorView.backgroundColor = .init(white: 0, alpha: 0.4)
 			indicatorView.startAnimating()
-			self.indicatorView = indicatorView
 
 			// Constraints
 			indicatorView.translatesAutoresizingMaskIntoConstraints = false
@@ -216,6 +228,7 @@ open class SettingsViewController: UIViewController {
 			}
 
 			// Fade-in
+			indicatorView.layer.removeAllAnimations()
 			indicatorView.alpha = 0
 			UIView.animate(withDuration: self.fadeDuration, delay: 0, options: .curveEaseOut, animations: {
 				indicatorView.alpha = 1
@@ -233,6 +246,7 @@ open class SettingsViewController: UIViewController {
 
 		// Fade-out
 		DispatchQueue.main.async {
+			indicatorView.layer.removeAllAnimations()
 			UIView.animate(withDuration: self.fadeDuration, delay: 0, options: .curveEaseOut, animations: {
 				indicatorView.alpha = 0
 			}, completion: { flag in
@@ -250,7 +264,8 @@ open class SettingsViewController: UIViewController {
 		switch reuseIdentifier {
 		case "PSChildPaneSpecifier",
 			 "PSTitleValueSpecifier",
-			 "PSMultiValueSpecifier":
+			 "PSMultiValueSpecifier",
+			 "PSProductButtonSpecifier":
 			return SettingsTableViewCell(style: .value1, reuseIdentifier: reuseIdentifier)
 		default:
 			return SettingsTableViewCell(style: .default, reuseIdentifier: reuseIdentifier)
@@ -273,6 +288,13 @@ open class SettingsViewController: UIViewController {
 			updateCellMultiValue(cell, data)
 		case "PSMultiValueSelectorSpecifier":
 			updateCellMultiValueSelector(cell, data)
+
+		// Custom
+		case "PSButtonSpecifier":
+			cell.textLabel?.text = localized(data.title)
+		case "PSProductButtonSpecifier":
+			updateCellProductButton(cell, data)
+
 		default:
 			break
 		}

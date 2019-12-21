@@ -8,15 +8,19 @@
 	<array>
 		<dict>
 			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-			<key>FooterText</key>
-			<string>Product description</string>
+			<string>PSProductGroupSpecifier</string>
+			<key>ProductIdentifier</key>
+			<string>org.cocoapods.demo.SettingsBundleViewController-Example.product1</string>
 		</dict>
 		<dict>
 			<key>Type</key>
 			<string>PSProductButtonSpecifier</string>
-			<key>Title</key>
+			<key>ProductIdentifier</key>
 			<string>org.cocoapods.demo.SettingsBundleViewController-Example.product1</string>
+			<key>RequestText</key>
+			<string>Product Request</string>
+			<key>NoItemText</key>
+			<string>No item</string>
 		</dict>
 		<dict>
 			<key>Type</key>
