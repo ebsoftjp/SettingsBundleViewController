@@ -21,6 +21,7 @@ open class SettingsViewController: UIViewController {
 	open var selectedIndexPath: IndexPath?
 	open var orgSelectedIndexPath: IndexPath?
 
+	open var tableView: UITableView?
 	open var cellArray: [SettingsCellData]?
 	open var titleText = Bundle(for: QLPreviewController.self)
 		.localizedString(forKey: "Settings", value: "Settings", table: nil)
@@ -29,6 +30,8 @@ open class SettingsViewController: UIViewController {
 
 	open var fadeDuration = 0.2
 	open var indicatorView: UIActivityIndicatorView?
+
+	open var disposeBag = DisposeBag()
 
 	// Init view controller
 	open func reset(splitMaster: Bool, bundleFileName: String, fileName: String? = nil, indexPath: IndexPath? = nil) {
@@ -42,9 +45,7 @@ open class SettingsViewController: UIViewController {
 		currentFileName = fileName
 		selectedIndexPath = indexPath
 		cellArray = createData()
-		view.subviews.compactMap { $0 as? UITableView }.forEach {
-			$0.reloadData()
-		}
+		tableView?.reloadData()
 	}
 
 	open override func viewDidLoad() {
@@ -67,6 +68,7 @@ open class SettingsViewController: UIViewController {
 		tableView.delegate = self
 		tableView.dataSource = self
 		view.addSubview(tableView)
+		self.tableView = tableView
 
 		// Add constraint to table view
 		tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -91,13 +93,13 @@ open class SettingsViewController: UIViewController {
 		super.viewWillAppear(animated)
 
 		// Deselect selected cell
-		view.subviews.compactMap { $0 as? UITableView }.forEach {
-			if let indexPath = $0.indexPathForSelectedRow {
-				$0.deselectRow(at: indexPath, animated: true)
+		if let tableView = tableView {
+			if let indexPath = tableView.indexPathForSelectedRow {
+				tableView.deselectRow(at: indexPath, animated: true)
 			} else if splitMaster,
 				!(splitViewController?.isCollapsed ?? false),
 				let indexPath = orgSelectedIndexPath {
-				$0.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+				tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
 			}
 		}
 	}

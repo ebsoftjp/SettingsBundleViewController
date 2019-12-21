@@ -42,6 +42,20 @@ extension SettingsViewController: SKProductsRequestDelegate {
 			let request = SKProductsRequest(productIdentifiers: Set<String>(productIdentifiers))
 			request.delegate = self
 			request.start()
+
+			products.asObservable()
+				.observeOn(MainScheduler.instance)
+				.subscribe(onNext: { [weak self] products in
+					self?.tableView?.beginUpdates()
+					self?.cellArray?.enumerated().forEach { i, data in
+						if let productIdentifier = data.string("ProductIdentifier") {
+							let product = products?.filter({ $0.productIdentifier == productIdentifier }).first
+							self?.cellArray?[i].overwriteFooterText = product?.localizedDescription
+						}
+					}
+					self?.tableView?.endUpdates()
+				})
+				.disposed(by: disposeBag)
 		}
 	}
 
