@@ -17,10 +17,14 @@ open class SettingsViewController: UIViewController {
 	open var fileName: String { return currentFileName ?? "Root" }
 	open var selectedIndexPath: IndexPath?
 	open var orgSelectedIndexPath: IndexPath?
+
 	open var cellArray: [SettingsCellData]?
 	open var titleText = Bundle(for: QLPreviewController.self)
 		.localizedString(forKey: "Settings", value: "Settings", table: nil)
-	
+
+	open var fadeDuration = 0.2
+	open var indicatorView: UIActivityIndicatorView?
+
 	// Init view controller
 	open func reset(splitMaster: Bool, bundleFileName: String, fileName: String? = nil, indexPath: IndexPath? = nil) {
 		self.splitMaster = splitMaster
@@ -176,6 +180,64 @@ open class SettingsViewController: UIViewController {
 			let viewController = type(of: self).init()
 			viewController.reset(splitMaster: false, bundleFileName: bundleFileName, fileName: fileName, indexPath: indexPath)
 			navigationController?.pushViewController(viewController, animated: true)
+		}
+	}
+
+	// Start indicator
+	open func startIndicator() {
+		guard indicatorView == nil else {
+			return
+		}
+
+		DispatchQueue.main.async {
+			let indicatorView = UIActivityIndicatorView(style: .white)
+			if #available(iOS 13.0, *) {
+				indicatorView.style = .medium
+				indicatorView.color = .white
+			}
+			self.view.addSubview(indicatorView)
+			indicatorView.backgroundColor = .init(white: 0, alpha: 0.4)
+			indicatorView.startAnimating()
+			self.indicatorView = indicatorView
+
+			// Constraints
+			indicatorView.translatesAutoresizingMaskIntoConstraints = false
+			indicatorView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+			for attr in [.leading, .trailing, .top, .bottom] as [NSLayoutConstraint.Attribute] {
+				indicatorView.superview!.addConstraint(
+					NSLayoutConstraint(
+						item: indicatorView,
+						attribute: attr,
+						relatedBy: .equal,
+						toItem: indicatorView.superview,
+						attribute: attr,
+						multiplier: 1,
+						constant: 0))
+			}
+
+			// Fade-in
+			indicatorView.alpha = 0
+			UIView.animate(withDuration: self.fadeDuration, delay: 0, options: .curveEaseOut, animations: {
+				indicatorView.alpha = 1
+			})
+		}
+	}
+
+	// Stop indicator
+	open func stopIndicator() {
+		guard let indicatorView = indicatorView else {
+			return
+		}
+
+		self.indicatorView = nil
+
+		// Fade-out
+		DispatchQueue.main.async {
+			UIView.animate(withDuration: self.fadeDuration, delay: 0, options: .curveEaseOut, animations: {
+				indicatorView.alpha = 0
+			}, completion: { flag in
+				indicatorView.removeFromSuperview()
+			})
 		}
 	}
 
