@@ -18,6 +18,7 @@ open class SettingsBundleViewController: UISplitViewController {
 	// Get default value in UserDefaults
 	public static var defaults: [String: Any] {
 		var res = [String: Any]()
+		let entityType = EKEntityType.event
 		var eventStore: EKEventStore?
 		if EKEventStore.authorizationStatus(for: .event) == .authorized {
 			eventStore = EKEventStore()
@@ -31,6 +32,11 @@ open class SettingsBundleViewController: UISplitViewController {
 					switch dic["Type"] as? String {
 					case "PSEventMultiValueSpecifier":
 						res[key] = eventStore?.defaultCalendarForNewEvents?.calendarIdentifier
+					case "PSEventToggleSwitchSpecifier":
+						// No add default
+						eventStore?.calendars(for: entityType).forEach {
+							res[key + $0.calendarIdentifier] = dic["DefaultValue"]
+						}
 					default:
 						res[key] = dic["DefaultValue"]
 					}

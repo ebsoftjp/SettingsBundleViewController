@@ -34,4 +34,34 @@ extension SettingsViewController {
 			.disposed(by: cell.disposeBag)
 	}
 
+	// EventToggleSwitch
+	open func updateCellEventToggleSwitch(_ cell: SettingsTableViewCell, _ data: SettingsCellData) {
+		cell.textLabel?.text = localized(data.title)
+		cell.accessoryType = .disclosureIndicator
+		cell.didSelectHandler = { tableView, indexPath in
+			self.showChild(tableView, indexPath)
+		}
+
+		let entityType = EKEntityType.event
+		var eventStore: EKEventStore?
+		if EKEventStore.authorizationStatus(for: entityType) == .authorized {
+			eventStore = EKEventStore()
+		}
+
+		eventStore?.calendars(for: entityType).forEach {
+			UserDefaults.standard.rx.observe(Bool.self, data.key! + $0.calendarIdentifier)
+				.subscribe(onNext: { _ in
+					let n = eventStore?.calendars(for: entityType).reduce(0) { acc, calendar in
+						acc + (UserDefaults.standard.bool(forKey: data.key! + calendar.calendarIdentifier) ? 1 : 0)
+					}
+					if let n = n {
+						cell.detailTextLabel?.text = "\(n)"
+					} else {
+						cell.detailTextLabel?.text = nil
+					}
+				})
+				.disposed(by: cell.disposeBag)
+		}
+	}
+
 }

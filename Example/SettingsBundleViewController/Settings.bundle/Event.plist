@@ -14,6 +14,16 @@
 			<key>Key</key>
 			<string>test_event_multivalue</string>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSEventToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Event ToggleSwitch</string>
+			<key>Key</key>
+			<string>test_event_toggleswitch</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
 	</array>
 </dict>
 </plist>

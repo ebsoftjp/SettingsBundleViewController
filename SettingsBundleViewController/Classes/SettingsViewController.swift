@@ -199,14 +199,39 @@ open class SettingsViewController: UIViewController {
 					source.calendars(for: entityType).sorted(by: { v1, v2 -> Bool in
 						v1.title.lowercased() < v2.title.lowercased()
 					}).forEach { calendar in
-						let tmpCell2 = SettingsCellData(plistData: [
+						let cellData = SettingsCellData(plistData: [
 							"Type": "PSMultiValueSelectorSpecifier",
 							"Title": calendar.title,
 							"Value": calendar.calendarIdentifier,
 							"Key": key,
 							"Color": UIColor(cgColor: calendar.cgColor),
 						])
-						res[res.count - 1].childData.append(tmpCell2)
+						res[res.count - 1].childData.append(cellData)
+					}
+				}
+			}
+
+		case "PSEventToggleSwitchSpecifier":
+			let entityType = EKEntityType.event
+			if EKEventStore.authorizationStatus(for: entityType) == .authorized {
+				EKEventStore().sources.sorted(by: { v1, v2 -> Bool in
+					v1.title.lowercased() < v2.title.lowercased()
+				}).forEach { source in
+					res.append(SettingsCellData(plistData: [
+						"Type": "PSGroupSpecifier",
+						"Title": source.title,
+					]))
+					source.calendars(for: entityType).sorted(by: { v1, v2 -> Bool in
+						v1.title.lowercased() < v2.title.lowercased()
+					}).forEach { calendar in
+						let cellData = SettingsCellData(plistData: [
+							"Type": "PSToggleSwitchSpecifier",
+							"Title": calendar.title,
+							"Key": key + calendar.calendarIdentifier,
+							"DefaultValue": data.defaultValue ?? false,
+							"Color": UIColor(cgColor: calendar.cgColor),
+						])
+						res[res.count - 1].childData.append(cellData)
 					}
 				}
 			}
@@ -233,6 +258,21 @@ open class SettingsViewController: UIViewController {
 			bundle: Bundle.main,
 			value: text,
 			comment: text)
+	}
+
+	// Localized title with color bar
+	open func localizedTitle(_ data: SettingsCellData) -> NSAttributedString? {
+		let text = NSMutableAttributedString()
+		if let color = data.plistData["Color"] as? UIColor {
+			text.append(NSAttributedString(string: "  ", attributes: [
+				.backgroundColor: color,
+			]))
+			text.append(NSAttributedString(string: "  ", attributes: [:]))
+		}
+		if let title = localized(data.title) {
+			text.append(NSAttributedString(string: title, attributes: [:]))
+		}
+		return text.length > 0 ? text : nil
 	}
 
 	// Show ChildPane
@@ -330,6 +370,7 @@ open class SettingsViewController: UIViewController {
 			 "PSTitleValueSpecifier",
 			 "PSMultiValueSpecifier",
 			 "PSEventMultiValueSpecifier",
+			 "PSEventToggleSwitchSpecifier",
 			 "PSProductButtonSpecifier":
 			return SettingsTableViewCell(style: .value1, reuseIdentifier: reuseIdentifier)
 		default:
@@ -359,6 +400,8 @@ open class SettingsViewController: UIViewController {
 			cell.textLabel?.text = localized(data.title)
 		case "PSEventMultiValueSpecifier":
 			updateCellEventMultiValue(cell, data)
+		case "PSEventToggleSwitchSpecifier":
+			updateCellEventToggleSwitch(cell, data)
 		case "PSProductButtonSpecifier":
 			updateCellProductButton(cell, data)
 
