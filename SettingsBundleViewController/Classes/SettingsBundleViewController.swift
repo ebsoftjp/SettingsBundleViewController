@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import EventKit
 
 open class SettingsBundleViewController: UISplitViewController {
 
@@ -17,13 +18,22 @@ open class SettingsBundleViewController: UISplitViewController {
 	// Get default value in UserDefaults
 	public static var defaults: [String: Any] {
 		var res = [String: Any]()
+		var eventStore: EKEventStore?
+		if EKEventStore.authorizationStatus(for: .event) == .authorized {
+			eventStore = EKEventStore()
+		}
+
 		Bundle.main.urls(forResourcesWithExtension: "plist", subdirectory: bundleFileName)?.forEach {
 			let plistData = NSDictionary(contentsOf: $0)
 			(plistData?["PreferenceSpecifiers"] as? NSArray)?.forEach {
 				if let dic = $0 as? [String: Any],
-					let key = dic["Key"] as? String,
-					let value = dic["DefaultValue"] {
-					res[key] = value
+					let key = dic["Key"] as? String {
+					switch dic["Type"] as? String {
+					case "PSEventMultiValueSpecifier":
+						res[key] = eventStore?.defaultCalendarForNewEvents?.calendarIdentifier
+					default:
+						res[key] = dic["DefaultValue"]
+					}
 				}
 			}
 		}

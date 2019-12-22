@@ -151,7 +151,18 @@ public extension SettingsViewController {
 
 	// MultiValue selector
 	func updateCellMultiValueSelector(_ cell: SettingsTableViewCell, _ data: SettingsCellData) {
-		cell.textLabel?.text = localized(data.title)
+		let text = NSMutableAttributedString()
+		if let color = data.plistData["Color"] as? UIColor {
+			text.append(NSAttributedString(string: "  ", attributes: [
+				.backgroundColor: color,
+			]))
+			text.append(NSAttributedString(string: "  ", attributes: [:]))
+		}
+		if let title = localized(data.title) {
+			text.append(NSAttributedString(string: title, attributes: [:]))
+		}
+		cell.textLabel?.attributedText = text
+
 		cell.didSelectHandler = { tableView, indexPath in
 			UserDefaults.standard.set(data.plistData["Value"], forKey: data.key!)
 			tableView.deselectRow(at: indexPath, animated: true)

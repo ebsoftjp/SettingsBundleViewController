@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import EventKit
 import StoreKit
 import QuickLook
 import RxSwift
@@ -114,7 +115,7 @@ open class SettingsViewController: UIViewController {
 					if data.isGroup {
 						if data.specifierType == "PSRadioGroupSpecifier" {
 							// Use PSMultiValueSelectorSpecifier
-							data.appendChild(data)
+							data.childData += appendChild(data)
 						}
 						res.append(data)
 					} else {
@@ -150,12 +151,73 @@ open class SettingsViewController: UIViewController {
 				currentFileName = file
 				res = createData()
 			} else {
-				res.removeAll()
-				res.append(SettingsCellData(plistData: [
-					"Type": "PSGroupSpecifier",
-				]))
-				res[res.count - 1].appendChild(data)
+				//res.removeAll()
+				res = createData(withChildData: data)
 			}
+		}
+		return res
+	}
+
+	// Add child for MultiValue and RadioGroup
+	open func appendChild(_ data: SettingsCellData) -> [SettingsCellData] {
+		var res = [SettingsCellData]()
+		if let key = data.key,
+			!key.isEmpty,
+			let titles = data.plistData["Titles"] as? [String],
+			let values = data.plistData["Values"] as? [Any] {
+			for i in 0..<titles.count {
+				res.append(SettingsCellData(plistData: [
+					"Type": "PSMultiValueSelectorSpecifier",
+					"Title": titles[i],
+					"Value": values[i],
+					"Key": key,
+				]))
+			}
+		}
+		return res
+	}
+
+	// Add child for MultiValue and RadioGroup
+	open func createData(withChildData data: SettingsCellData) -> [SettingsCellData] {
+		var res = [SettingsCellData]()
+		
+		guard let key = data.key, !key.isEmpty else {
+			return res
+		}
+		
+		switch data.specifierType {
+		case "PSEventMultiValueSpecifier":
+			let entityType = EKEntityType.event
+			if EKEventStore.authorizationStatus(for: entityType) == .authorized {
+				EKEventStore().sources.sorted(by: { v1, v2 -> Bool in
+					v1.title.lowercased() < v2.title.lowercased()
+				}).forEach { source in
+					res.append(SettingsCellData(plistData: [
+						"Type": "PSGroupSpecifier",
+						"Title": source.title,
+					]))
+					source.calendars(for: entityType).sorted(by: { v1, v2 -> Bool in
+						v1.title.lowercased() < v2.title.lowercased()
+					}).forEach { calendar in
+						let tmpCell2 = SettingsCellData(plistData: [
+							"Type": "PSMultiValueSelectorSpecifier",
+							"Title": calendar.title,
+							"Value": calendar.calendarIdentifier,
+							"Key": key,
+							"Color": UIColor(cgColor: calendar.cgColor),
+						])
+						res[res.count - 1].childData.append(tmpCell2)
+					}
+				}
+			}
+
+		default:
+			res = [
+				SettingsCellData(plistData: [
+					"Type": "PSGroupSpecifier",
+				])
+			]
+			res[res.count - 1].childData = appendChild(data)
 		}
 		return res
 	}
@@ -267,6 +329,7 @@ open class SettingsViewController: UIViewController {
 		case "PSChildPaneSpecifier",
 			 "PSTitleValueSpecifier",
 			 "PSMultiValueSpecifier",
+			 "PSEventMultiValueSpecifier",
 			 "PSProductButtonSpecifier":
 			return SettingsTableViewCell(style: .value1, reuseIdentifier: reuseIdentifier)
 		default:
@@ -294,6 +357,8 @@ open class SettingsViewController: UIViewController {
 		// Custom
 		case "PSButtonSpecifier":
 			cell.textLabel?.text = localized(data.title)
+		case "PSEventMultiValueSpecifier":
+			updateCellEventMultiValue(cell, data)
 		case "PSProductButtonSpecifier":
 			updateCellProductButton(cell, data)
 

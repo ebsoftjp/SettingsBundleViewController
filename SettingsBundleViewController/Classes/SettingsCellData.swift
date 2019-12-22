@@ -32,25 +32,6 @@ public struct SettingsCellData {
 		self.plistData = plistData
 	}
 
-	// Add child for MultiValue and RadioGroup
-	public mutating func appendChild(_ parent: SettingsCellData) {
-		if let key = parent.key,
-			!key.isEmpty,
-			let defaultValue = parent.defaultValue,
-			let titles = parent.plistData["Titles"] as? [String],
-			let values = parent.plistData["Values"] as? [Any] {
-			for i in 0..<titles.count {
-				childData.append(SettingsCellData(plistData: [
-					"Type": "PSMultiValueSelectorSpecifier",
-					"Title": titles[i],
-					"Value": values[i],
-					"Key": key,
-					"DefaultValue": defaultValue,
-				]))
-			}
-		}
-	}
-
 	// Title from value
 	public func title<T: Equatable>(fromValue value: T?) -> String? {
 		if let value = value,

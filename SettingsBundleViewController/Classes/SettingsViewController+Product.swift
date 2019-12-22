@@ -75,7 +75,7 @@ extension SettingsViewController: SKProductsRequestDelegate {
 			.observeOn(MainScheduler.instance)
 			.subscribe(onNext: { [weak self] products in
 				if let products = products {
-					if let product = products.filter({ $0.productIdentifier == data.title }).first {
+					if let product = products.filter({ $0.productIdentifier == data.string("ProductIdentifier") }).first {
 						cell.textLabel?.text = product.localizedTitle
 						let priceFormatter = NumberFormatter()
 						priceFormatter.formatterBehavior = .behavior10_4

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import EventKit
 import SettingsBundleViewController
 
 class ViewController: UIViewController {
@@ -38,6 +39,33 @@ class ViewController: UIViewController {
 	@IBAction func openSettings(_ sender: Any) {
 		let viewController = SettingsBundleViewController()
 		present(viewController, animated: true, completion: nil)
+	}
+
+	@IBAction func eventAuth(_ sender: Any) {
+		let entityType = EKEntityType.event
+		switch EKEventStore.authorizationStatus(for: entityType) {
+		case .notDetermined:
+			EKEventStore().requestAccess(to: entityType, completion: {
+				(granted, error) in
+			})
+		case .restricted:
+			break
+		case .denied:
+			let alert = UIAlertController(title: "",
+										  message: "Warning: Event\(entityType.rawValue) is disable",
+										  preferredStyle: .alert)
+			alert.addAction(UIAlertAction(title: "Open settings", style: .default, handler: { alert in
+				if #available(iOS 10.0, *) {
+					UIApplication.shared.open(URL(string: "app-settings:")!, options: [:], completionHandler: nil)
+				}
+			}))
+			alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+			present(alert, animated: true, completion: nil)
+		case .authorized:
+			break
+		@unknown default:
+			fatalError()
+		}
 	}
 
 }
