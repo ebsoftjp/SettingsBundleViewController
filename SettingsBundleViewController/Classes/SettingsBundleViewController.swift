@@ -37,6 +37,8 @@ open class SettingsBundleViewController: UISplitViewController {
 						eventStore?.calendars(for: entityType).forEach {
 							res[key + $0.calendarIdentifier] = dic["DefaultValue"]
 						}
+					case "PSReminderMultiValueSpecifier":
+						res[key] = eventStore?.defaultCalendarForNewReminders()?.calendarIdentifier
 					default:
 						res[key] = dic["DefaultValue"]
 					}

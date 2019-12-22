@@ -8,6 +8,10 @@
 	<array>
 		<dict>
 			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSEventMultiValueSpecifier</string>
 			<key>Title</key>
 			<string>Event MultiValue</string>
@@ -23,6 +27,18 @@
 			<string>test_event_toggleswitch</string>
 			<key>DefaultValue</key>
 			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSReminderMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Reminder MultiValue</string>
+			<key>Key</key>
+			<string>test_reminder_multivalue</string>
 		</dict>
 	</array>
 </dict>

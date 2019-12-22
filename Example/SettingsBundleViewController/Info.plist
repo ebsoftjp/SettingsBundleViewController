@@ -38,5 +38,7 @@
 	</array>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Calendar</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>Reminder</string>
 </dict>
 </plist>

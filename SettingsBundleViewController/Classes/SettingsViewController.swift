@@ -180,61 +180,20 @@ open class SettingsViewController: UIViewController {
 	// Add child for MultiValue and RadioGroup
 	open func createData(withChildData data: SettingsCellData) -> [SettingsCellData] {
 		var res = [SettingsCellData]()
-		
+
 		guard let key = data.key, !key.isEmpty else {
 			return res
 		}
-		
+
 		switch data.specifierType {
 		case "PSEventMultiValueSpecifier":
-			let entityType = EKEntityType.event
-			if EKEventStore.authorizationStatus(for: entityType) == .authorized {
-				EKEventStore().sources.sorted(by: { v1, v2 -> Bool in
-					v1.title.lowercased() < v2.title.lowercased()
-				}).forEach { source in
-					res.append(SettingsCellData(plistData: [
-						"Type": "PSGroupSpecifier",
-						"Title": source.title,
-					]))
-					source.calendars(for: entityType).sorted(by: { v1, v2 -> Bool in
-						v1.title.lowercased() < v2.title.lowercased()
-					}).forEach { calendar in
-						let cellData = SettingsCellData(plistData: [
-							"Type": "PSMultiValueSelectorSpecifier",
-							"Title": calendar.title,
-							"Value": calendar.calendarIdentifier,
-							"Key": key,
-							"Color": UIColor(cgColor: calendar.cgColor),
-						])
-						res[res.count - 1].childData.append(cellData)
-					}
-				}
-			}
+			return createEventMultiValue(data, entityType: .event)
 
 		case "PSEventToggleSwitchSpecifier":
-			let entityType = EKEntityType.event
-			if EKEventStore.authorizationStatus(for: entityType) == .authorized {
-				EKEventStore().sources.sorted(by: { v1, v2 -> Bool in
-					v1.title.lowercased() < v2.title.lowercased()
-				}).forEach { source in
-					res.append(SettingsCellData(plistData: [
-						"Type": "PSGroupSpecifier",
-						"Title": source.title,
-					]))
-					source.calendars(for: entityType).sorted(by: { v1, v2 -> Bool in
-						v1.title.lowercased() < v2.title.lowercased()
-					}).forEach { calendar in
-						let cellData = SettingsCellData(plistData: [
-							"Type": "PSToggleSwitchSpecifier",
-							"Title": calendar.title,
-							"Key": key + calendar.calendarIdentifier,
-							"DefaultValue": data.defaultValue ?? false,
-							"Color": UIColor(cgColor: calendar.cgColor),
-						])
-						res[res.count - 1].childData.append(cellData)
-					}
-				}
-			}
+			return createEventToggleSwitch(data, entityType: .event)
+
+		case "PSReminderMultiValueSpecifier":
+			return createEventMultiValue(data, entityType: .reminder)
 
 		default:
 			res = [
@@ -371,6 +330,7 @@ open class SettingsViewController: UIViewController {
 			 "PSMultiValueSpecifier",
 			 "PSEventMultiValueSpecifier",
 			 "PSEventToggleSwitchSpecifier",
+			 "PSReminderMultiValueSpecifier",
 			 "PSProductButtonSpecifier":
 			return SettingsTableViewCell(style: .value1, reuseIdentifier: reuseIdentifier)
 		default:
@@ -399,9 +359,11 @@ open class SettingsViewController: UIViewController {
 		case "PSButtonSpecifier":
 			cell.textLabel?.text = localized(data.title)
 		case "PSEventMultiValueSpecifier":
-			updateCellEventMultiValue(cell, data)
+			updateCellEventMultiValue(cell, data, entityType: .event)
 		case "PSEventToggleSwitchSpecifier":
-			updateCellEventToggleSwitch(cell, data)
+			updateCellEventToggleSwitch(cell, data, entityType: .event)
+		case "PSReminderMultiValueSpecifier":
+			updateCellEventMultiValue(cell, data, entityType: .reminder)
 		case "PSProductButtonSpecifier":
 			updateCellProductButton(cell, data)
 

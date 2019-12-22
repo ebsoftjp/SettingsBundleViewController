@@ -41,8 +41,14 @@ class ViewController: UIViewController {
 		present(viewController, animated: true, completion: nil)
 	}
 
-	@IBAction func eventAuth(_ sender: Any) {
-		let entityType = EKEntityType.event
+	@IBAction func eventAuth(_ sender: UIButton) {
+		var entityType: EKEntityType!
+		switch sender.titleLabel?.text {
+		case "Reminder auth":
+			entityType = .reminder
+		default:
+			entityType = .event
+		}
 		switch EKEventStore.authorizationStatus(for: entityType) {
 		case .notDetermined:
 			EKEventStore().requestAccess(to: entityType, completion: {
