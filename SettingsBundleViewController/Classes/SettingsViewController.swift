@@ -195,6 +195,9 @@ open class SettingsViewController: UIViewController {
 		case "PSReminderMultiValueSpecifier":
 			return createEventMultiValue(data, entityType: .reminder)
 
+		case "PSReminderToggleSwitchSpecifier":
+			return createEventToggleSwitch(data, entityType: .reminder)
+
 		default:
 			res = [
 				SettingsCellData(plistData: [
@@ -331,6 +334,7 @@ open class SettingsViewController: UIViewController {
 			 "PSEventMultiValueSpecifier",
 			 "PSEventToggleSwitchSpecifier",
 			 "PSReminderMultiValueSpecifier",
+			 "PSReminderToggleSwitchSpecifier",
 			 "PSProductButtonSpecifier":
 			return SettingsTableViewCell(style: .value1, reuseIdentifier: reuseIdentifier)
 		default:
@@ -364,6 +368,8 @@ open class SettingsViewController: UIViewController {
 			updateCellEventToggleSwitch(cell, data, entityType: .event)
 		case "PSReminderMultiValueSpecifier":
 			updateCellEventMultiValue(cell, data, entityType: .reminder)
+		case "PSReminderToggleSwitchSpecifier":
+			updateCellEventToggleSwitch(cell, data, entityType: .reminder)
 		case "PSProductButtonSpecifier":
 			updateCellProductButton(cell, data)
 
