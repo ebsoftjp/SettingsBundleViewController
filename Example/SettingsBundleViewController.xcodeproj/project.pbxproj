@@ -15,6 +15,7 @@
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
+		B8BE3E9423AFBE27006F9F69 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B8BE3E9223AFBE27006F9F69 /* Model.xcdatamodeld */; };
 		B8E41CF023A28B720068C174 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B8E41CEF23A28B720068C174 /* Settings.bundle */; };
 		B8F462B323AE2D33009138FD /* SettingsViewControllerCustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F462B223AE2D33009138FD /* SettingsViewControllerCustom.swift */; };
 /* End PBXBuildFile section */
@@ -48,6 +49,7 @@
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		74E695CF21A1B34D2C9A180D /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		79FF0D8973572702B6D5A737 /* Pods-SettingsBundleViewController_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SettingsBundleViewController_Example.release.xcconfig"; path = "Target Support Files/Pods-SettingsBundleViewController_Example/Pods-SettingsBundleViewController_Example.release.xcconfig"; sourceTree = "<group>"; };
+		B8BE3E9323AFBE27006F9F69 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		B8E41CEF23A28B720068C174 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		B8F462B223AE2D33009138FD /* SettingsViewControllerCustom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewControllerCustom.swift; sourceTree = "<group>"; };
 		E0BAA48C6F173339B111CCAA /* SettingsBundleViewController.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = SettingsBundleViewController.podspec; path = ../SettingsBundleViewController.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
@@ -124,6 +126,7 @@
 			isa = PBXGroup;
 			children = (
 				607FACD41AFB9204008FA782 /* Info.plist */,
+				B8BE3E9223AFBE27006F9F69 /* Model.xcdatamodeld */,
 				B8E41CEF23A28B720068C174 /* Settings.bundle */,
 			);
 			name = "Supporting Files";
@@ -371,6 +374,7 @@
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				B8F462B323AE2D33009138FD /* SettingsViewControllerCustom.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				B8BE3E9423AFBE27006F9F69 /* Model.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -618,6 +622,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		B8BE3E9223AFBE27006F9F69 /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				B8BE3E9323AFBE27006F9F69 /* Model.xcdatamodel */,
+			);
+			currentVersion = B8BE3E9323AFBE27006F9F69 /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 607FACC81AFB9204008FA782 /* Project object */;
 }

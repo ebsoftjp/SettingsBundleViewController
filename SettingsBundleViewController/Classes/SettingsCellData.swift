@@ -76,4 +76,9 @@ public struct SettingsCellData {
 		return plistData[key] as? String
 	}
 
+	// Bool from key
+	public func bool(_ key: String) -> Bool? {
+		return plistData[key] as? Bool
+	}
+
 }

@@ -8,6 +8,7 @@
 
 import UIKit
 import EventKit
+import CoreData
 import StoreKit
 import QuickLook
 import RxSwift
@@ -31,6 +32,11 @@ open class SettingsViewController: UIViewController {
 
 	open var fadeDuration = 0.2
 	open var indicatorView: UIActivityIndicatorView?
+
+	open var editingStyle = UITableViewCell.EditingStyle.none
+	open var scrollIndexPath: IndexPath?
+	open var configureCell: ((UITableViewCell, NSManagedObject) -> Void)?
+	open var fetchedResultsController: NSFetchedResultsController<NSManagedObject>? = nil
 
 	open var disposeBag = DisposeBag()
 
@@ -151,7 +157,6 @@ open class SettingsViewController: UIViewController {
 				currentFileName = file
 				res = createData()
 			} else {
-				//res.removeAll()
 				res = createData(withChildData: data)
 			}
 		}
@@ -181,10 +186,6 @@ open class SettingsViewController: UIViewController {
 	open func createData(withChildData data: SettingsCellData) -> [SettingsCellData] {
 		var res = [SettingsCellData]()
 
-		guard let key = data.key, !key.isEmpty else {
-			return res
-		}
-
 		switch data.specifierType {
 		case "PSEventMultiValueSpecifier":
 			return createEventMultiValue(data, entityType: .event)
@@ -198,6 +199,9 @@ open class SettingsViewController: UIViewController {
 		case "PSReminderToggleSwitchSpecifier":
 			return createEventToggleSwitch(data, entityType: .reminder)
 
+		case "PSCoreDataSpecifier":
+			createCoreData(withChildData: data)
+
 		default:
 			res = [
 				SettingsCellData(plistData: [
@@ -207,6 +211,10 @@ open class SettingsViewController: UIViewController {
 			res[res.count - 1].childData = appendChild(data)
 		}
 		return res
+	}
+
+	// Add fetchedResultsController for custom
+	open func createCoreData(withChildData data: SettingsCellData) {
 	}
 
 	// Localized text from Settings.bundle
@@ -372,6 +380,8 @@ open class SettingsViewController: UIViewController {
 			updateCellEventToggleSwitch(cell, data, entityType: .reminder)
 		case "PSProductButtonSpecifier":
 			updateCellProductButton(cell, data)
+		case "PSCoreDataSpecifier":
+			updateCellChildPane(cell, data)
 
 		default:
 			break

@@ -86,6 +86,30 @@
 		</dict>
 		<dict>
 			<key>Type</key>
+			<string>PSCoreDataSpecifier</string>
+			<key>Title</key>
+			<string>Test Entity 1</string>
+			<key>Entity</key>
+			<string>TestEntity1</string>
+			<key>SortKey</key>
+			<string>date</string>
+			<key>SortAscending</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSCoreDataSpecifier</string>
+			<key>Title</key>
+			<string>Test Entity 2</string>
+			<key>Entity</key>
+			<string>TestEntity2</string>
+			<key>SortKey</key>
+			<string>index</string>
+			<key>SortAscending</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSTitleValueSpecifier</string>
 			<key>Title</key>
 			<string>Test TitleValue</string>
