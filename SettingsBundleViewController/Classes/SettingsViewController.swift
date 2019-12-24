@@ -35,7 +35,6 @@ open class SettingsViewController: UIViewController {
 
 	open var editingStyle = UITableViewCell.EditingStyle.none
 	open var scrollIndexPath: IndexPath?
-	open var configureCell: ((UITableViewCell, NSManagedObject) -> Void)?
 	open var fetchedResultsController: NSFetchedResultsController<NSManagedObject>? = nil
 
 	open var disposeBag = DisposeBag()
@@ -350,7 +349,7 @@ open class SettingsViewController: UIViewController {
 		}
 	}
 
-	open func updateCellContent(_ cell: SettingsTableViewCell, _ data: SettingsCellData) {
+	open func updateCellContent(_ cell: SettingsTableViewCell, data: SettingsCellData) {
 		switch data.specifierType {
 		case "PSChildPaneSpecifier":
 			updateCellChildPane(cell, data)
@@ -385,6 +384,16 @@ open class SettingsViewController: UIViewController {
 
 		default:
 			break
+		}
+	}
+
+	open func updateCellContent(_ cell: SettingsTableViewCell, event: NSManagedObject) {
+		guard let fetchedResultsController = fetchedResultsController else {
+			return
+		}
+
+		if let key = fetchedResultsController.fetchRequest.sortDescriptors?.first?.key {
+			cell.textLabel?.text = String(describing: event.value(forKey: key))
 		}
 	}
 

@@ -27,25 +27,24 @@ extension SettingsViewController: UITableViewDataSource {
 
 	// Create cell
 	open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		if let fetchedResultsController = fetchedResultsController {
-			let reuseIdentifier = "Cell"
-			let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier)
-				?? UITableViewCell(style: .default, reuseIdentifier: reuseIdentifier)
-			cell.textLabel?.numberOfLines = 64
-			let event = fetchedResultsController.object(at: indexPath)
-			configureCell?(cell, event)
-			return cell
+		var data: SettingsCellData?
+		if let cellArray = cellArray, cellArray.count > 0 {
+			data = cellArray[indexPath.section].childData[indexPath.row]
 		}
-
-		let data = cellArray?[indexPath.section].childData[indexPath.row]
 		let reuseIdentifier = data?.specifierType ?? "Cell"
 
 		let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier)
 			?? createCell(reuseIdentifier)
 
 		cell.textLabel?.numberOfLines = 16
-		if let cell = cell as? SettingsTableViewCell, let data = data {
-			updateCellContent(cell, data)
+		if let cell = cell as? SettingsTableViewCell {
+			if let data = data {
+				updateCellContent(cell, data: data)
+			} else if let event = fetchedResultsController?.object(at: indexPath) {
+				updateCellContent(cell, event: event)
+			} else {
+				cell.textLabel?.text = "Undefined specifierType"
+			}
 		} else {
 			cell.textLabel?.text = "Undefined specifierType"
 		}

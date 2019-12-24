@@ -28,7 +28,7 @@ public struct SettingsCellData {
 	public var isPush: Bool { return isChildPane || isMultiValue }
 
 	// Initialization
-	init(plistData: Dictionary<String, Any>) {
+	public init(plistData: Dictionary<String, Any>) {
 		self.plistData = plistData
 	}
 

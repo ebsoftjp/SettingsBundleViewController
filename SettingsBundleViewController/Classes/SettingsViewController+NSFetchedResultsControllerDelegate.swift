@@ -39,16 +39,16 @@ extension SettingsViewController: NSFetchedResultsControllerDelegate {
 			}
 		case .update:
 			if let indexPath = indexPath,
-				let cell = tableView?.cellForRow(at: indexPath),
+				let cell = tableView?.cellForRow(at: indexPath) as? SettingsTableViewCell,
 				let event = anObject as? NSManagedObject {
-				configureCell?(cell, event)
+				updateCellContent(cell, event: event)
 			}
 		case .move:
 			if let indexPath = indexPath,
-				let cell = tableView?.cellForRow(at: indexPath),
+				let cell = tableView?.cellForRow(at: indexPath) as? SettingsTableViewCell,
 				let newIndexPath = newIndexPath,
 				let event = anObject as? NSManagedObject {
-				configureCell?(cell, event)
+				updateCellContent(cell, event: event)
 				tableView?.moveRow(at: indexPath, to: newIndexPath)
 			}
 		@unknown default:
@@ -66,6 +66,24 @@ extension SettingsViewController: NSFetchedResultsControllerDelegate {
 
 
 	// MARK: - etc
+
+	open func createFetchedResultsController(context: NSManagedObjectContext, data: SettingsCellData) {
+		if #available(iOS 10.0, *),
+			let entity = data.string("Entity"),
+			let sortKey = data.string("SortKey"),
+			let sortAscending = data.bool("SortAscending") {
+
+			let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entity)
+			fetchRequest.fetchBatchSize = 50
+			fetchRequest.sortDescriptors = [
+				NSSortDescriptor(key: sortKey, ascending: sortAscending),
+			]
+
+			fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: "Master")
+			fetchedResultsController?.delegate = self
+			try? fetchedResultsController?.performFetch()
+		}
+	}
 
 	open func removeAllItems() {
 		guard let fetchedResultsController = fetchedResultsController else {

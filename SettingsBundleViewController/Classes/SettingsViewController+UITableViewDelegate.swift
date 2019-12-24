@@ -7,22 +7,17 @@
 //
 
 import UIKit
+import CoreData
 
 extension SettingsViewController: UITableViewDelegate {
 
 	// Will select
 	open func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-		if let _ = fetchedResultsController {
-			return false
-		}
 		return (tableView.cellForRow(at: indexPath) as? SettingsTableViewCell)?.didSelectHandler != nil
 	}
 
 	// Did select
 	open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		if let _ = fetchedResultsController {
-			return
-		}
 		(tableView.cellForRow(at: indexPath) as? SettingsTableViewCell)?.didSelectHandler?(tableView, indexPath)
 	}
 
@@ -43,7 +38,7 @@ extension SettingsViewController: UITableViewDelegate {
 	}
 
 	open func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-		if let _ = fetchedResultsController {
+		guard let fetchedResultsController = fetchedResultsController else {
 			return
 		}
 
@@ -51,19 +46,22 @@ extension SettingsViewController: UITableViewDelegate {
 			return
 		}
 
-//		var dataArray = [T]()
-//		let add = sourceIndexPath < destinationIndexPath ? 1 : -1
-//		for i in stride(from: sourceIndexPath.row, through: destinationIndexPath.row, by: add) {
-//			dataArray.append(fetchedResultsController.object(at: IndexPath(row: i, section: sourceIndexPath.section)))
-//		}
-//
-//		for i in 1..<dataArray.count {
-////			print("\(i)/\(dataArray.count)")
-//			dataArray[0].swap(dataArray[i])
-//		}
+		var dataArray = [NSManagedObject]()
+		let add = sourceIndexPath < destinationIndexPath ? 1 : -1
+		for i in stride(from: sourceIndexPath.row, through: destinationIndexPath.row, by: add) {
+			dataArray.append(fetchedResultsController.object(at: IndexPath(row: i, section: sourceIndexPath.section)))
+		}
+
+		if let key = fetchedResultsController.fetchRequest.sortDescriptors?.first?.key {
+			for i in 1..<dataArray.count {
+				let value = dataArray[0].value(forKey: key)
+				dataArray[0].setValue(dataArray[i].value(forKey: key), forKey: key)
+				dataArray[i].setValue(value, forKey: key)
+			}
+		}
 
 		do {
-			try fetchedResultsController?.managedObjectContext.save()
+			try fetchedResultsController.managedObjectContext.save()
 		} catch {
 			// Replace this implementation with code to handle the error appropriately.
 			// fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
