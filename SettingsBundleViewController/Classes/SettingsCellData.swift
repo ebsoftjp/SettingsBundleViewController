@@ -6,7 +6,7 @@
 //  Copyright (c) 2019 Mamoru Sugihara. All rights reserved.
 //
 
-public struct SettingsCellData {
+public class SettingsCellData {
 
 	public let plistData: Dictionary<String, Any>
 	public var childData = [SettingsCellData]()

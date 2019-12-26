@@ -21,7 +21,7 @@ extension SettingsViewController {
 			EKEventStore().sources.sorted(by: { v1, v2 -> Bool in
 				v1.title.lowercased() < v2.title.lowercased()
 			}).forEach { source in
-				var sourceData = SettingsCellData(plistData: [
+				let sourceData = SettingsCellData(plistData: [
 					"Type": "PSGroupSpecifier",
 					"Title": source.title,
 				])
@@ -53,7 +53,7 @@ extension SettingsViewController {
 			EKEventStore().sources.sorted(by: { v1, v2 -> Bool in
 				v1.title.lowercased() < v2.title.lowercased()
 			}).forEach { source in
-				var sourceData = SettingsCellData(plistData: [
+				let sourceData = SettingsCellData(plistData: [
 					"Type": "PSGroupSpecifier",
 					"Title": source.title,
 				])

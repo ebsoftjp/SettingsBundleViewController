@@ -116,8 +116,10 @@ open class SettingsViewController: UIViewController {
 		if let filePath = Bundle.main.path(forResource: bundleFileName + "/" + fileName, ofType: "plist") {
 			(NSDictionary(contentsOfFile: filePath)?["PreferenceSpecifiers"] as? NSArray)?.enumerated().forEach {
 				if let plistData = $0.element as? Dictionary<String, Any> {
-					var data = SettingsCellData(plistData: plistData)
-					if data.isGroup {
+					let data = SettingsCellData(plistData: plistData)
+					if !isAddCellData(data) {
+						// No add data
+					} else if data.isGroup {
 						if data.specifierType == "PSRadioGroupSpecifier" {
 							// Use PSMultiValueSelectorSpecifier
 							data.childData += appendChild(data)
@@ -160,6 +162,11 @@ open class SettingsViewController: UIViewController {
 			}
 		}
 		return res
+	}
+
+	// Check add cell data
+	open func isAddCellData(_ data: SettingsCellData) -> Bool {
+		return true
 	}
 
 	// Add child for MultiValue and RadioGroup
@@ -332,7 +339,7 @@ open class SettingsViewController: UIViewController {
 	@objc open func closeViewController() {
 		dismiss(animated: true, completion: nil)
 	}
-	
+
 	open func createCell(_ reuseIdentifier: String) -> SettingsTableViewCell {
 		switch reuseIdentifier {
 		case "PSChildPaneSpecifier",
