@@ -19,9 +19,6 @@ class SettingsViewControllerCustom: SettingsViewController {
 			let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext {
 			createFetchedResultsController(context: context, data: data)
 
-			editingStyle = .delete
-			tableView?.isEditing = true
-
 			let barButtonItemAdd = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
 			let barButtonItemClear = UIBarButtonItem(barButtonSystemItem: .refresh, target: nil, action: nil)
 			let barButtonItemEdit = UIBarButtonItem(barButtonSystemItem: .edit, target: nil, action: nil)

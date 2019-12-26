@@ -11,6 +11,27 @@ import CoreData
 
 extension SettingsViewController: NSFetchedResultsControllerDelegate {
 
+	public struct TableViewSetting {
+		var editingStyle = UITableViewCell.EditingStyle.none
+		var isEditing = false
+		var canEdit = false
+		var canMove = false
+
+		mutating func set(_ data: SettingsCellData) {
+			switch data.string("EditingStyle") {
+			case "delete":
+				editingStyle = .delete
+			case "insert":
+				editingStyle = .insert
+			default:
+				editingStyle = .none
+			}
+			isEditing = data.bool("IsEditing") ?? false
+			canEdit = data.bool("CanEdit") ?? false
+			canMove = data.bool("CanMove") ?? false
+		}
+	}
+
 	open func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
 		tableView?.beginUpdates()
 	}
@@ -72,6 +93,8 @@ extension SettingsViewController: NSFetchedResultsControllerDelegate {
 			let entity = data.string("Entity"),
 			let sortKey = data.string("SortKey"),
 			let sortAscending = data.bool("SortAscending") {
+
+			tableViewSetting.set(data)
 
 			let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entity)
 			fetchRequest.fetchBatchSize = 50

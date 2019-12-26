@@ -95,6 +95,14 @@
 			<string>date</string>
 			<key>SortAscending</key>
 			<false/>
+			<key>EditingStyle</key>
+			<string>delete</string>
+			<key>IsEditing</key>
+			<true/>
+			<key>CanEdit</key>
+			<true/>
+			<key>CanMove</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -106,6 +114,12 @@
 			<key>SortKey</key>
 			<string>index</string>
 			<key>SortAscending</key>
+			<true/>
+			<key>EditingStyle</key>
+			<string>none</string>
+			<key>CanEdit</key>
+			<true/>
+			<key>CanMove</key>
 			<true/>
 		</dict>
 		<dict>

@@ -87,15 +87,15 @@ extension SettingsViewController: UITableViewDelegate {
 	}
 
 	open func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-		return true
+		return tableViewSetting.canEdit
 	}
 
 	open func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-		return true
+		return tableViewSetting.canMove
 	}
 
 	open func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-		return editingStyle
+		return tableViewSetting.editingStyle
 	}
 
 	open func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {

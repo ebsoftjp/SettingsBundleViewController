@@ -33,11 +33,16 @@ open class SettingsViewController: UIViewController {
 	open var fadeDuration = 0.2
 	open var indicatorView: UIActivityIndicatorView?
 
-	open var editingStyle = UITableViewCell.EditingStyle.none
+	open var tableViewSetting = TableViewSetting()
 	open var scrollIndexPath: IndexPath?
 	open var fetchedResultsController: NSFetchedResultsController<NSManagedObject>? = nil
 
 	open var disposeBag = DisposeBag()
+
+	// Checks if the specified file exists
+	open func isExistFile(_ fileName: String) -> Bool {
+		return Bundle.main.path(forResource: bundleFileName + "/" + fileName, ofType: "plist") != nil
+	}
 
 	// Init view controller
 	open func reset(splitMaster: Bool, bundleFileName: String, fileName: String? = nil, indexPath: IndexPath? = nil) {
@@ -73,6 +78,7 @@ open class SettingsViewController: UIViewController {
 		let tableView = UITableView(frame: .zero, style: .grouped)
 		tableView.delegate = self
 		tableView.dataSource = self
+		tableView.isEditing = tableViewSetting.isEditing
 		view.addSubview(tableView)
 		self.tableView = tableView
 
