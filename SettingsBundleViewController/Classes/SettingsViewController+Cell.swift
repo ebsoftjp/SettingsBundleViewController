@@ -50,9 +50,30 @@ public extension SettingsViewController {
 
 	// Slider
 	func updateCellSlider(_ cell: SettingsTableViewCell, _ data: SettingsCellData) {
-		cell.textLabel?.text = " "
+		cell.textLabel?.text = nil
 
 		if cell.contentView.subviews.compactMap({ $0 as? UISlider }).count == 0 {
+			let dummyView = UILabel()
+			dummyView.font = .preferredFont(forTextStyle: .body)
+			dummyView.text = " "
+			cell.contentView.addSubview(dummyView)
+
+			// Add constraint to dummy view
+			dummyView.translatesAutoresizingMaskIntoConstraints = false
+			dummyView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+			for attr in [.leading: .leadingMargin, .trailing: .trailingMargin, .top: .topMargin, .bottom: .bottomMargin]
+				as [NSLayoutConstraint.Attribute: NSLayoutConstraint.Attribute] {
+				cell.contentView.addConstraint(
+					NSLayoutConstraint(
+						item: dummyView,
+						attribute: attr.key,
+						relatedBy: .equal,
+						toItem: cell.contentView,
+						attribute: attr.value,
+						multiplier: 1,
+						constant: 0))
+			}
+
 			let view = UISlider()
 			view.backgroundColor = .clear
 			view.minimumValue = data.plistData["MinimumValue"] as? Float ?? 0
@@ -62,15 +83,14 @@ public extension SettingsViewController {
 			// Add constraint to slider
 			view.translatesAutoresizingMaskIntoConstraints = false
 			view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-			for attr in [.leading: .leadingMargin, .trailing: .trailingMargin, .centerY: .centerY]
-				as [NSLayoutConstraint.Attribute: NSLayoutConstraint.Attribute] {
+			for attr in [.leading, .trailing, .centerY] as [NSLayoutConstraint.Attribute] {
 				cell.contentView.addConstraint(
 					NSLayoutConstraint(
 						item: view,
-						attribute: attr.key,
+						attribute: attr,
 						relatedBy: .equal,
-						toItem: cell.contentView,
-						attribute: attr.value,
+						toItem: dummyView,
+						attribute: attr,
 						multiplier: 1,
 						constant: 0))
 			}
