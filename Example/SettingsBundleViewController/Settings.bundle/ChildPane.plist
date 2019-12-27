@@ -86,6 +86,14 @@
 		</dict>
 		<dict>
 			<key>Type</key>
+			<string>PSTextViewSpecifier</string>
+			<key>Key</key>
+			<string>test_textview</string>
+			<key>DefaultValue</key>
+			<string>Text TextView</string>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSCoreDataSpecifier</string>
 			<key>Title</key>
 			<string>Test Entity 1</string>

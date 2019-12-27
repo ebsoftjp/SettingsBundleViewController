@@ -382,6 +382,8 @@ open class SettingsViewController: UIViewController {
 		// Custom
 		case "PSButtonSpecifier":
 			cell.textLabel?.text = localized(data.title)
+		case "PSTextViewSpecifier":
+			updateCellTextView(cell, data)
 		case "PSEventMultiValueSpecifier":
 			updateCellEventMultiValue(cell, data, entityType: .event)
 		case "PSEventToggleSwitchSpecifier":

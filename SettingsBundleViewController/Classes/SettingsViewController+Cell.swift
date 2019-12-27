@@ -58,25 +58,25 @@ public extension SettingsViewController {
 			view.minimumValue = data.plistData["MinimumValue"] as? Float ?? 0
 			view.maximumValue = data.plistData["MaximumValue"] as? Float ?? 1
 			cell.contentView.addSubview(view)
+
+			// Add constraint to slider
+			view.translatesAutoresizingMaskIntoConstraints = false
+			view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+			for attr in [.leading: .leadingMargin, .trailing: .trailingMargin, .centerY: .centerY]
+				as [NSLayoutConstraint.Attribute: NSLayoutConstraint.Attribute] {
+				cell.contentView.addConstraint(
+					NSLayoutConstraint(
+						item: view,
+						attribute: attr.key,
+						relatedBy: .equal,
+						toItem: cell.contentView,
+						attribute: attr.value,
+						multiplier: 1,
+						constant: 0))
+			}
 		}
 
 		let view = cell.contentView.subviews.compactMap({ $0 as? UISlider }).first!
-
-		// Add constraint to slider
-		view.translatesAutoresizingMaskIntoConstraints = false
-		view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-		for attr in [.leading: .leadingMargin, .trailing: .trailingMargin, .centerY: .centerY]
-			as [NSLayoutConstraint.Attribute: NSLayoutConstraint.Attribute] {
-			cell.addConstraint(
-				NSLayoutConstraint(
-					item: view,
-					attribute: attr.key,
-					relatedBy: .equal,
-					toItem: cell,
-					attribute: attr.value,
-					multiplier: 1,
-					constant: 0))
-		}
 
 		UserDefaults.standard.rx.observe(Float.self, data.key!)
 			.subscribe(onNext: { f in
