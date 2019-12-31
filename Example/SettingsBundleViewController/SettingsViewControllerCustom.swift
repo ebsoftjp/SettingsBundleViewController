@@ -69,26 +69,26 @@ class SettingsViewControllerCustom: SettingsViewController {
 		// Custom type
 		switch data.specifierType {
 		case "PSButtonSpecifier":
-			cell.didSelectHandler = { tableView, indexPath in
+			cell.didSelectHandler = { [weak self] tableView, indexPath in
 				let alert = UIAlertController(title: nil, message: data.title, preferredStyle: .alert)
 				alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
 					tableView.deselectRow(at: indexPath, animated: true)
 				}))
-				self.present(alert, animated: true, completion: nil)
+				self?.present(alert, animated: true, completion: nil)
 			}
 
 		case "PSProductButtonSpecifier":
-			cell.didSelectHandler = { tableView, indexPath in
-				self.startIndicator()
+			cell.didSelectHandler = { [weak self] tableView, indexPath in
+				self?.startIndicator()
 				Observable.just(0)
 					.delay(.milliseconds(1000), scheduler: MainScheduler.instance)
-					.subscribe(onNext: { _ in
-						self.stopIndicator()
+					.subscribe(onNext: { [weak self] _ in
+						self?.stopIndicator()
 						let alert = UIAlertController(title: nil, message: data.string("ProductIdentifier"), preferredStyle: .alert)
 						alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
 							tableView.deselectRow(at: indexPath, animated: true)
 						}))
-						self.present(alert, animated: true, completion: nil)
+						self?.present(alert, animated: true, completion: nil)
 					})
 					.disposed(by: cell.disposeBag)
 			}
@@ -106,12 +106,12 @@ class SettingsViewControllerCustom: SettingsViewController {
 				let dateFormatter = DateFormatter()
 				dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SS"
 				cell.textLabel?.text = "\(dateFormatter.string(from: date))\n\(text)"
-				cell.didSelectHandler = { tableView, indexPath in
+				cell.didSelectHandler = { [weak self] tableView, indexPath in
 					let alert = UIAlertController(title: nil, message: text, preferredStyle: .alert)
 					alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
 						tableView.deselectRow(at: indexPath, animated: true)
 					}))
-					self.present(alert, animated: true, completion: nil)
+					self?.present(alert, animated: true, completion: nil)
 				}
 			}
 

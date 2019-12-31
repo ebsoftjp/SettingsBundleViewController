@@ -14,8 +14,8 @@ public extension SettingsViewController {
 	func updateCellChildPane(_ cell: SettingsTableViewCell, _ data: SettingsCellData) {
 		cell.textLabel?.text = localized(data.title)
 		cell.accessoryType = .disclosureIndicator
-		cell.didSelectHandler = { tableView, indexPath in
-			self.showChild(tableView, indexPath)
+		cell.didSelectHandler = { [weak self] tableView, indexPath in
+			self?.showChild(tableView, indexPath)
 		}
 	}
 
@@ -158,8 +158,8 @@ public extension SettingsViewController {
 	func updateCellMultiValue(_ cell: SettingsTableViewCell, _ data: SettingsCellData) {
 		cell.textLabel?.text = localized(data.title)
 		cell.accessoryType = .disclosureIndicator
-		cell.didSelectHandler = { tableView, indexPath in
-			self.showChild(tableView, indexPath)
+		cell.didSelectHandler = { [weak self] tableView, indexPath in
+			self?.showChild(tableView, indexPath)
 		}
 
 		UserDefaults.standard.rx.observe(AnyHashable.self, data.key!)
