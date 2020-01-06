@@ -37,6 +37,8 @@ open class SettingsViewController: UIViewController {
 	open var scrollIndexPath: IndexPath?
 	open var fetchedResultsController: NSFetchedResultsController<NSManagedObject>? = nil
 
+	open var bottomConstraint: NSLayoutConstraint?
+
 	open var disposeBag = DisposeBag()
 
 	// Checks if the specified file exists
@@ -86,15 +88,18 @@ open class SettingsViewController: UIViewController {
 		tableView.translatesAutoresizingMaskIntoConstraints = false
 		tableView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 		for attr in [.leading, .trailing, .top, .bottom] as [NSLayoutConstraint.Attribute] {
-			view.addConstraint(
-				NSLayoutConstraint(
+			let constraint = NSLayoutConstraint(
 					item: tableView,
 					attribute: attr,
 					relatedBy: .equal,
 					toItem: view,
 					attribute: attr,
 					multiplier: 1,
-					constant: 0))
+					constant: 0)
+			view.addConstraint(constraint)
+			if attr == .bottom {
+				bottomConstraint = constraint
+			}
 		}
 
 		// Request products
@@ -113,6 +118,71 @@ open class SettingsViewController: UIViewController {
 				let indexPath = orgSelectedIndexPath {
 				tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
 			}
+		}
+
+		let notificationCenter = NotificationCenter.default
+		notificationCenter.addObserver(self, selector:#selector(willShowKeyboard(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+		notificationCenter.addObserver(self, selector:#selector(didShowKeyboard(_:)), name: UIResponder.keyboardDidShowNotification, object: nil)
+		notificationCenter.addObserver(self, selector:#selector(willHideKeyboard(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+	}
+
+	open override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+		let notificationCenter = NotificationCenter.default
+		notificationCenter.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+		notificationCenter.removeObserver(self, name: UIResponder.keyboardDidShowNotification, object: nil)
+		notificationCenter.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+	}
+
+	// Will show keyboard
+	@objc open func willShowKeyboard(_ notification: Notification) {
+		if let userInfo = notification.userInfo as? [String: Any],
+			let keyboardInfo = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+			bottomConstraint?.constant = -keyboardInfo.cgRectValue.size.height
+			afterKeyboardAnimation(notification)
+		}
+	}
+
+	// Did show keyboard
+	@objc open func didShowKeyboard(_ notification: Notification) {
+		// Find an enabled keyboard and scroll to it
+		if let tableView = tableView {
+			var focusIndexPath: IndexPath?
+			tableView.visibleCells.forEach { cell in
+				// UITextView on contentView
+				cell.contentView.subviews.forEach {
+					if let textView = $0 as? UITextView,
+						textView.isFirstResponder,
+						let indexPath = tableView.indexPath(for: cell) {
+						focusIndexPath = indexPath
+					}
+				}
+				// UITextField on accessoryView
+				if let textField = cell.accessoryView as? UITextField,
+					textField.isFirstResponder,
+					let indexPath = tableView.indexPath(for: cell) {
+					focusIndexPath = indexPath
+				}
+			}
+			// Scroll
+			if let indexPath = focusIndexPath {
+				tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+			}
+		}
+	}
+
+	// Will hide keyboard
+	@objc open func willHideKeyboard(_ notification: Notification) {
+		bottomConstraint?.constant = 0
+		afterKeyboardAnimation(notification)
+	}
+
+	open func afterKeyboardAnimation(_ notification: Notification) {
+		if let userInfo = notification.userInfo as? [String: Any],
+			let duration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval {
+			UIView.animate(withDuration: duration, animations: { () -> Void in
+				self.view.layoutIfNeeded()
+			})
 		}
 	}
 
@@ -283,17 +353,18 @@ open class SettingsViewController: UIViewController {
 			return
 		}
 
-		indicatorView = UIActivityIndicatorView(style: .white)
+		if #available(iOS 13.0, *) {
+			indicatorView = UIActivityIndicatorView(style: .medium)
+			indicatorView?.color = .white
+		} else {
+			indicatorView = UIActivityIndicatorView(style: .white)
+		}
 
 		DispatchQueue.main.async {
 			guard let indicatorView = self.indicatorView else {
 				return
 			}
 
-			if #available(iOS 13.0, *) {
-				indicatorView.style = .medium
-				indicatorView.color = .white
-			}
 			self.view.addSubview(indicatorView)
 			indicatorView.backgroundColor = .init(white: 0, alpha: 0.4)
 			indicatorView.startAnimating()
