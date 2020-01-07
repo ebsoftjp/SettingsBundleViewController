@@ -15,6 +15,8 @@ open class SettingsBundleViewController: UISplitViewController {
 	public static var bundleFileName = "Settings.bundle"
 	public static var settingsViewControllerType: SettingsViewController.Type = SettingsViewController.self
 
+	open var keepViewControllers = [UIViewController]()
+
 	// Get default value in UserDefaults
 	public static var defaults: [String: Any] {
 		var res = [String: Any]()
@@ -58,13 +60,12 @@ open class SettingsBundleViewController: UISplitViewController {
 		delegate = self
 
 		// Add master and detail view controller
-		if viewControllers.count == 0 {
-			viewControllers = [true, false].map {
-				let viewController = type(of: self).settingsViewControllerType.init()
-				viewController.reset(splitMaster: $0, bundleFileName: type(of: self).bundleFileName)
-				return UINavigationController(rootViewController: viewController)
-			}
+		keepViewControllers = [true, false].map {
+			let viewController = type(of: self).settingsViewControllerType.init()
+			viewController.reset(splitMaster: $0, bundleFileName: type(of: self).bundleFileName)
+			return UINavigationController(rootViewController: viewController)
 		}
+		viewControllers = keepViewControllers
 	}
 
 }
@@ -72,12 +73,34 @@ open class SettingsBundleViewController: UISplitViewController {
 // MARK: - Split view
 extension SettingsBundleViewController: UISplitViewControllerDelegate {
 
+	public func targetDisplayModeForAction(in svc: UISplitViewController) -> UISplitViewController.DisplayMode {
+		return .allVisible
+	}
+
+	// From landscape to portrait
 	public func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController:UIViewController, onto primaryViewController:UIViewController) -> Bool {
+		if let navigationController = primaryViewController as? UINavigationController,
+			let viewController = navigationController.viewControllers.first as? SettingsViewController,
+			let tableView = viewController.tableView,
+			let indexPath = tableView.indexPathForSelectedRow {
+			// Deselect table cell of primary
+			tableView.deselectRow(at: indexPath, animated: false)
+		}
 		return true
 	}
 
-	public func targetDisplayModeForAction(in svc: UISplitViewController) -> UISplitViewController.DisplayMode {
-		return .allVisible
+	// From portrait to landscape
+	public func splitViewController(_ splitViewController: UISplitViewController, separateSecondaryFrom primaryViewController: UIViewController) -> UIViewController? {
+		if let navigationController = primaryViewController as? UINavigationController,
+			let viewController = navigationController.viewControllers.first as? SettingsViewController,
+			let tableView = viewController.tableView,
+			let indexPath = viewController.orgSelectedIndexPath {
+			// Revert primary to root
+			navigationController.popToRootViewController(animated: false)
+			// Select table cell of primary
+			tableView.selectRow(at: indexPath, animated: false, scrollPosition: .middle)
+		}
+		return (splitViewController as? SettingsBundleViewController)?.keepViewControllers.last
 	}
 
 }

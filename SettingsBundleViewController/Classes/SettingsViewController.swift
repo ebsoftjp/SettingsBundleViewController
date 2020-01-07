@@ -335,10 +335,12 @@ open class SettingsViewController: UIViewController {
 			if indexPath == orgSelectedIndexPath {
 				navigationController?.popViewController(animated: true)
 			} else {
+				// Change detail view controller
 				orgSelectedIndexPath = indexPath
 				navigationController?.popToRootViewController(animated: false)
 				let viewController = navigationController?.topViewController as? SettingsViewController
 				viewController?.reset(fileName: fileName, indexPath: indexPath)
+				viewController?.title = viewController?.titleText
 			}
 		} else {
 			let viewController = type(of: self).init()
