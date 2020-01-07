@@ -60,7 +60,7 @@ class SettingsViewControllerCustom: SettingsViewController {
 
 	func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
 		// Display header title including lowercase letters
-		(view as? UITableViewHeaderFooterView)?.textLabel?.text = cellArray?[section].headerText
+		(view as? UITableViewHeaderFooterView)?.textLabel?.text = localized(cellArray?[section].headerText)
 	}
 
 	override func updateCellContent(_ cell: SettingsTableViewCell, data: SettingsCellData) {

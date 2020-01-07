@@ -57,6 +57,7 @@ open class SettingsViewController: UIViewController {
 	open func reset(fileName: String? = nil, indexPath: IndexPath? = nil) {
 		currentFileName = fileName
 		selectedIndexPath = indexPath
+		fetchedResultsController = nil
 		cellArray = createData()
 		tableView?.reloadData()
 	}
@@ -177,6 +178,7 @@ open class SettingsViewController: UIViewController {
 		afterKeyboardAnimation(notification)
 	}
 
+	// Bottom animation for keyboard
 	open func afterKeyboardAnimation(_ notification: Notification) {
 		if let userInfo = notification.userInfo as? [String: Any],
 			let duration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval {
@@ -338,14 +340,14 @@ open class SettingsViewController: UIViewController {
 				// Change detail view controller
 				orgSelectedIndexPath = indexPath
 				navigationController?.popToRootViewController(animated: false)
-				let viewController = navigationController?.topViewController as? SettingsViewController
-				viewController?.reset(fileName: fileName, indexPath: indexPath)
-				viewController?.title = viewController?.titleText
+				let viewController = type(of: self).init()
+				navigationController?.setViewControllers([viewController], animated: false)
+				viewController.reset(splitMaster: false, bundleFileName: bundleFileName, fileName: fileName, indexPath: indexPath)
 			}
 		} else {
 			let viewController = type(of: self).init()
-			viewController.reset(splitMaster: false, bundleFileName: bundleFileName, fileName: fileName, indexPath: indexPath)
 			navigationController?.pushViewController(viewController, animated: true)
+			viewController.reset(splitMaster: false, bundleFileName: bundleFileName, fileName: fileName, indexPath: indexPath)
 		}
 	}
 
