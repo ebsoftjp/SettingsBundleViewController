@@ -1,5 +1,5 @@
 //
-//  SettingsViewController+UITableViewDelegate.swift
+//  SettingsViewController+TableViewDelegate.swift
 //  SettingsBundleViewController
 //
 //  Created by Mamoru Sugihara on 2019/12/12.

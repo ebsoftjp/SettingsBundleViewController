@@ -1,5 +1,5 @@
 //
-//  SettingsViewController+NSFetchedResultsControllerDelegate.swift
+//  SettingsViewController+FetchedResults.swift
 //  SettingsBundleViewController
 //
 //  Created by Mamoru Sugihara on 2019/12/23.
