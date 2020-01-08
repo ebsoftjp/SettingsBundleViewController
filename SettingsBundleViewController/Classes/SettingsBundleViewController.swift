@@ -14,18 +14,38 @@ open class SettingsBundleViewController: UISplitViewController {
 	// Use bundle filename
 	public static var bundleFileName = "Settings.bundle"
 	public static var settingsViewControllerType: SettingsViewController.Type = SettingsViewController.self
+	public static var disableDefaultsKey = [
+		"PSEventMultiValueSpecifier",
+		"PSEventToggleSwitchSpecifier",
+		"PSReminderMultiValueSpecifier",
+		"PSReminderToggleSwitchSpecifier",
+	]
+
+	// EventKit
+	public static weak var eventStore: EKEventStore?
 
 	open var keepViewControllers = [UIViewController]()
 
 	// Get default value in UserDefaults
 	public static var defaults: [String: Any] {
 		var res = [String: Any]()
-		var eventStore: EKEventStore?
-		if EKEventStore.authorizationStatus(for: .event) == .authorized
-			|| EKEventStore.authorizationStatus(for: .reminder) == .authorized {
-			eventStore = EKEventStore()
+		Bundle.main.urls(forResourcesWithExtension: "plist", subdirectory: bundleFileName)?.forEach {
+			let plistData = NSDictionary(contentsOf: $0)
+			(plistData?["PreferenceSpecifiers"] as? NSArray)?.forEach {
+				if let dic = $0 as? [String: Any],
+					let key = dic["Key"] as? String,
+					let type = dic["Type"] as? String,
+					!disableDefaultsKey.contains(type) {
+					res[key] = dic["DefaultValue"]
+				}
+			}
 		}
+		return res
+	}
 
+	// Get default value for event and reminder in UserDefaults
+	public static var defaultsForEvent: [String: Any] {
+		var res = [String: Any]()
 		Bundle.main.urls(forResourcesWithExtension: "plist", subdirectory: bundleFileName)?.forEach {
 			let plistData = NSDictionary(contentsOf: $0)
 			(plistData?["PreferenceSpecifiers"] as? NSArray)?.forEach {
@@ -45,7 +65,7 @@ open class SettingsBundleViewController: UISplitViewController {
 							res[key + $0.calendarIdentifier] = dic["DefaultValue"]
 						}
 					default:
-						res[key] = dic["DefaultValue"]
+						break
 					}
 				}
 			}

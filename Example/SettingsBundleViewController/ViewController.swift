@@ -12,18 +12,22 @@ import SettingsBundleViewController
 
 class ViewController: UIViewController {
 
-    override func viewDidLoad() {
+	var eventStore: EKEventStore?
+
+	override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
 
 		SettingsBundleViewController.settingsViewControllerType = SettingsViewControllerCustom.self
 		let defaults = SettingsBundleViewController.defaults
 		UserDefaults.standard.register(defaults: defaults)
-		print("========")
+		print("==== UserDefaults ====")
 		defaults.forEach {
 			print("\($0.key): \(UserDefaults.standard.value(forKey: $0.key)!) (\($0.value))")
 		}
 		print("========")
+
+		createEventStore()
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
@@ -53,6 +57,8 @@ class ViewController: UIViewController {
 		case .notDetermined:
 			EKEventStore().requestAccess(to: entityType, completion: {
 				(granted, error) in
+				self.eventStore = nil
+				self.createEventStore()
 			})
 		case .restricted:
 			break
@@ -68,9 +74,26 @@ class ViewController: UIViewController {
 			alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 			present(alert, animated: true, completion: nil)
 		case .authorized:
-			break
+			createEventStore()
 		@unknown default:
 			fatalError()
+		}
+	}
+
+	func createEventStore() {
+		if eventStore == nil,
+			(EKEventStore.authorizationStatus(for: .event) == .authorized
+				|| EKEventStore.authorizationStatus(for: .reminder) == .authorized) {
+			eventStore = EKEventStore()
+			SettingsBundleViewController.eventStore = eventStore
+
+			let defaults = SettingsBundleViewController.defaultsForEvent
+			UserDefaults.standard.register(defaults: defaults)
+			print("==== UserDefaults for event ====")
+			defaults.forEach {
+				print("\($0.key): \(UserDefaults.standard.value(forKey: $0.key)!) (\($0.value))")
+			}
+			print("========")
 		}
 	}
 

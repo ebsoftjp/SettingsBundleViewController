@@ -34,7 +34,7 @@ public class SettingsCellData {
 
 	// Title from value
 	public func title<T: Equatable>(fromValue value: T?) -> String? {
-		if let value = value,
+		if let value = value ?? (defaultValue as? T),
 			let titles = plistData["Titles"] as? [String],
 			let values = plistData["Values"] as? [T],
 			let index = values.firstIndex(of: value) {
@@ -45,7 +45,7 @@ public class SettingsCellData {
 	
 	// Bool from value
 	public func bool<T: Equatable>(fromValue value: T?) -> Bool {
-		if let value = value {
+		if let value = value ?? (defaultValue as? T) {
 			if plistData.keys.contains("TrueValue"),
 				value == (plistData["TrueValue"] as? T) {
 				return true
@@ -53,8 +53,9 @@ public class SettingsCellData {
 				value == (plistData["FalseValue"] as? T) {
 				return false
 			}
+			return value as? Bool ?? false
 		}
-		return value as? Bool ?? false
+		return false
 	}
 
 	// Value from bool
@@ -65,7 +66,8 @@ public class SettingsCellData {
 
 	// Equal
 	public func isEqualValue<T: Equatable>(_ newValue: T?) -> Bool {
-		guard let v1 = newValue, let v2 = plistData["Value"] as? T else {
+		guard let v1 = newValue ?? (defaultValue as? T),
+			let v2 = plistData["Value"] as? T else {
 			return false
 		}
 		return v1 == v2

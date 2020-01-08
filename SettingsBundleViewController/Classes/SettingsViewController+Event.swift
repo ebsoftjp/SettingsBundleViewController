@@ -17,8 +17,9 @@ extension SettingsViewController {
 		var res = [SettingsCellData]()
 		if let key = data.key,
 			!key.isEmpty,
-			EKEventStore.authorizationStatus(for: entityType) == .authorized {
-			EKEventStore().sources.sorted(by: { v1, v2 -> Bool in
+			let eventStore = SettingsBundleViewController.eventStore,
+			let defaultCalendar = calendar(fromEntityType: entityType) {
+			eventStore.sources.sorted(by: { v1, v2 -> Bool in
 				v1.title.lowercased() < v2.title.lowercased()
 			}).forEach { source in
 				let sourceData = SettingsCellData(plistData: [
@@ -31,8 +32,9 @@ extension SettingsViewController {
 					let cellData = SettingsCellData(plistData: [
 						"Type": "PSMultiValueSelectorSpecifier",
 						"Title": calendar.title,
-						"Value": calendar.calendarIdentifier,
 						"Key": key,
+						"Value": calendar.calendarIdentifier,
+						"DefaultValue": defaultCalendar.calendarIdentifier,
 						"Color": UIColor(cgColor: calendar.cgColor),
 					])
 					sourceData.childData.append(cellData)
@@ -47,10 +49,8 @@ extension SettingsViewController {
 
 	open func createEventToggleSwitch(_ data: SettingsCellData, entityType: EKEntityType) -> [SettingsCellData] {
 		var res = [SettingsCellData]()
-		if let key = data.key,
-			!key.isEmpty,
-			EKEventStore.authorizationStatus(for: entityType) == .authorized {
-			EKEventStore().sources.sorted(by: { v1, v2 -> Bool in
+		if let key = data.key, !key.isEmpty {
+			SettingsBundleViewController.eventStore?.sources.sorted(by: { v1, v2 -> Bool in
 				v1.title.lowercased() < v2.title.lowercased()
 			}).forEach { source in
 				let sourceData = SettingsCellData(plistData: [
@@ -85,14 +85,11 @@ extension SettingsViewController {
 			self?.showChild(tableView, indexPath)
 		}
 
-		var eventStore: EKEventStore?
-		if EKEventStore.authorizationStatus(for: entityType) == .authorized {
-			eventStore = EKEventStore()
-		}
-
 		UserDefaults.standard.rx.observe(String.self, data.key!)
-			.subscribe(onNext: { value in
-				cell.detailTextLabel?.text = eventStore?.calendars(for: entityType).filter { $0.calendarIdentifier == value }.first?.title
+			.subscribe(onNext: { [weak self] value in
+				let value = value ?? self?.calendar(fromEntityType: entityType)?.calendarIdentifier
+				cell.detailTextLabel?.text = SettingsBundleViewController.eventStore?
+					.calendars(for: entityType).filter { $0.calendarIdentifier == value }.first?.title
 			})
 			.disposed(by: cell.disposeBag)
 	}
@@ -113,8 +110,13 @@ extension SettingsViewController {
 		eventStore?.calendars(for: entityType).forEach {
 			UserDefaults.standard.rx.observe(Bool.self, data.key! + $0.calendarIdentifier)
 				.subscribe(onNext: { _ in
-					let n = eventStore?.calendars(for: entityType).reduce(0) { acc, calendar in
-						acc + (UserDefaults.standard.bool(forKey: data.key! + calendar.calendarIdentifier) ? 1 : 0)
+					let n = SettingsBundleViewController.eventStore?.calendars(for: entityType).reduce(0) { acc, calendar in
+						var res = acc ?? 0
+						if UserDefaults.standard.object(forKey: data.key! + calendar.calendarIdentifier) as? Bool
+							?? (data.defaultValue as? Bool ?? false) {
+							res += 1
+						}
+						return res
 					}
 					if let n = n {
 						cell.detailTextLabel?.text = "\(n)"
@@ -126,4 +128,14 @@ extension SettingsViewController {
 		}
 	}
 
+	open func calendar(fromEntityType entityType: EKEntityType) -> EKCalendar? {
+		switch entityType {
+		case .event:
+			return SettingsBundleViewController.eventStore?.defaultCalendarForNewEvents
+		case .reminder:
+			return SettingsBundleViewController.eventStore?.defaultCalendarForNewReminders()
+		default:
+			return nil
+		}
+	}
 }

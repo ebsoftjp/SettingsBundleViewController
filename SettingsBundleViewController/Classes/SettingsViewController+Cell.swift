@@ -25,7 +25,6 @@ public extension SettingsViewController {
 
 		if cell.accessoryView == nil {
 			let view = UISwitch()
-			view.isOn = UserDefaults.standard.bool(forKey: data.key!)
 			cell.accessoryView = view
 		}
 
@@ -178,9 +177,9 @@ public extension SettingsViewController {
 			tableView.deselectRow(at: indexPath, animated: true)
 		}
 
-		UserDefaults.standard.rx.observe(String.self, data.key!)
-			.subscribe(onNext: { str in
-				cell.accessoryType = data.isEqualValue(str) ? .checkmark : .none
+		UserDefaults.standard.rx.observe(AnyHashable.self, data.key!)
+			.subscribe(onNext: { value in
+				cell.accessoryType = data.isEqualValue(value) ? .checkmark : .none
 			})
 			.disposed(by: cell.disposeBag)
 	}
