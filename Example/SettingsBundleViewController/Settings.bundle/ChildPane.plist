@@ -154,6 +154,16 @@
 		</dict>
 		<dict>
 			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>Test Count</string>
+			<key>Key</key>
+			<string>test_count</string>
+			<key>DefaultValue</key>
+			<integer>256</integer>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSButtonSpecifier</string>
 			<key>Title</key>
 			<string>Test Button 1</string>

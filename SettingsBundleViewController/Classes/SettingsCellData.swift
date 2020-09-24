@@ -40,6 +40,9 @@ public class SettingsCellData {
 			let index = values.firstIndex(of: value) {
 			return titles[index]
 		}
+		if let value = value as? Int {
+			return "\(value)"
+		}
 		return value as? String
 	}
 	

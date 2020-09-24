@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SettingsBundleViewController'
-  s.version          = '0.1.12'
+  s.version          = '0.1.13'
   s.summary          = 'Create settings view controller from \'Settings.bundle\'.'
   s.swift_versions   = '5.0.0'
 
@@ -30,7 +30,7 @@ This also supports UISplitViewController.
   s.source           = { :git => 'https://github.com/ebsoftjp/SettingsBundleViewController.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '9.0'
 
   s.source_files = 'SettingsBundleViewController/Classes/**/*'
   
