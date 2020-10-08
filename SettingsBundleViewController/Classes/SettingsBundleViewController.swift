@@ -7,7 +7,9 @@
 //
 
 import UIKit
+#if !os(tvOS)
 import EventKit
+#endif
 
 open class SettingsBundleViewController: UISplitViewController {
 
@@ -21,8 +23,10 @@ open class SettingsBundleViewController: UISplitViewController {
 		"PSReminderToggleSwitchSpecifier",
 	]
 
+	#if !os(tvOS)
 	// EventKit
 	public static weak var eventStore: EKEventStore?
+	#endif
 
 	open var keepViewControllers = [UIViewController]()
 
@@ -46,6 +50,7 @@ open class SettingsBundleViewController: UISplitViewController {
 	// Get default value for event and reminder in UserDefaults
 	public static var defaultsForEvent: [String: Any] {
 		var res = [String: Any]()
+		#if !os(tvOS)
 		Bundle.main.urls(forResourcesWithExtension: "plist", subdirectory: bundleFileName)?.forEach {
 			let plistData = NSDictionary(contentsOf: $0)
 			(plistData?["PreferenceSpecifiers"] as? NSArray)?.forEach {
@@ -70,6 +75,7 @@ open class SettingsBundleViewController: UISplitViewController {
 				}
 			}
 		}
+		#endif
 		return res
 	}
 

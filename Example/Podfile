@@ -1,7 +1,7 @@
-platform :ios, '9.0'
-use_frameworks!
-
 target 'SettingsBundleViewController_Example' do
+  platform :ios, '9.0'
+  use_frameworks!
+
   pod 'SettingsBundleViewController', :path => '../'
   pod 'RxSwift'
   pod 'RxCocoa'
@@ -14,6 +14,15 @@ target 'SettingsBundleViewController_Example' do
     pod 'FBSnapshotTestCase'
     pod 'Nimble-Snapshots'
   end
+end
+
+target 'SettingsBundleViewController_ExampleTV' do
+  platform :tvos, '9.0'
+  use_frameworks!
+
+  pod 'SettingsBundleViewController', :path => '../'
+  pod 'RxSwift'
+  pod 'RxCocoa'
 end
 
 post_install do | installer |

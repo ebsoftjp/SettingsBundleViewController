@@ -7,15 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		18FBC87C66B02EC0B395B798 /* Pods_SettingsBundleViewController_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1090CA7BB045AA19CAC35FDD /* Pods_SettingsBundleViewController_Example.framework */; };
+		18FBC87C66B02EC0B395B798 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		21994CB1B38513C304082382 /* Pods_SettingsBundleViewController_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E67988BF4E26D77B5D49D31 /* Pods_SettingsBundleViewController_Tests.framework */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
-		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
+		7623267208552806CB458107 /* Pods_SettingsBundleViewController_ExampleTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34C03394C820DE6AFA48E8FC /* Pods_SettingsBundleViewController_ExampleTV.framework */; };
+		B8B05A5F252E5FEA006C0604 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B8B05A5E252E5FEA006C0604 /* LaunchScreen.storyboard */; };
+		B8B05AA1252E9D18006C0604 /* MainTV.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B8B05A9F252E9D18006C0604 /* MainTV.storyboard */; };
+		B8B05AAD252EA17E006C0604 /* LaunchScreenTV.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B8B05AAB252EA17E006C0604 /* LaunchScreenTV.storyboard */; };
 		B8BE3E9423AFBE27006F9F69 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B8BE3E9223AFBE27006F9F69 /* Model.xcdatamodeld */; };
+		B8D7F2A0252E56E200E85B61 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
+		B8D7F2A1252E56E200E85B61 /* SettingsViewControllerCustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F462B223AE2D33009138FD /* SettingsViewControllerCustom.swift */; };
+		B8D7F2A2252E56E200E85B61 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
+		B8D7F2A3252E56E200E85B61 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B8BE3E9223AFBE27006F9F69 /* Model.xcdatamodeld */; };
+		B8D7F2A7252E56E200E85B61 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B8E41CEF23A28B720068C174 /* Settings.bundle */; };
+		B8D7F2AA252E56E200E85B61 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		B8E41CF023A28B720068C174 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B8E41CEF23A28B720068C174 /* Settings.bundle */; };
 		B8F462B323AE2D33009138FD /* SettingsViewControllerCustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F462B223AE2D33009138FD /* SettingsViewControllerCustom.swift */; };
 /* End PBXBuildFile section */
@@ -32,26 +41,32 @@
 
 /* Begin PBXFileReference section */
 		046F47A4C9B6CC438C94B298 /* Pods-SettingsBundleViewController_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SettingsBundleViewController_Tests.debug.xcconfig"; path = "Target Support Files/Pods-SettingsBundleViewController_Tests/Pods-SettingsBundleViewController_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		1090CA7BB045AA19CAC35FDD /* Pods_SettingsBundleViewController_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SettingsBundleViewController_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FF5E16736DBF50E926B5AFC /* Pods-SettingsBundleViewController_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SettingsBundleViewController_Example.debug.xcconfig"; path = "Target Support Files/Pods-SettingsBundleViewController_Example/Pods-SettingsBundleViewController_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		33F1DD8086A2D45075144951 /* Pods-SettingsBundleViewController_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SettingsBundleViewController_Tests.release.xcconfig"; path = "Target Support Files/Pods-SettingsBundleViewController_Tests/Pods-SettingsBundleViewController_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		34C03394C820DE6AFA48E8FC /* Pods_SettingsBundleViewController_ExampleTV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SettingsBundleViewController_ExampleTV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E67988BF4E26D77B5D49D31 /* Pods_SettingsBundleViewController_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SettingsBundleViewController_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D35B29F033B85414788A668 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		5DA909BCFACA5EF90AE0473E /* Pods-SettingsBundleViewController_ExampleTV.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SettingsBundleViewController_ExampleTV.release.xcconfig"; path = "Target Support Files/Pods-SettingsBundleViewController_ExampleTV/Pods-SettingsBundleViewController_ExampleTV.release.xcconfig"; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* SettingsBundleViewController_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SettingsBundleViewController_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		607FACD71AFB9204008FA782 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		607FACDA1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		607FACDC1AFB9204008FA782 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		607FACE51AFB9204008FA782 /* SettingsBundleViewController_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SettingsBundleViewController_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		74E695CF21A1B34D2C9A180D /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		79FF0D8973572702B6D5A737 /* Pods-SettingsBundleViewController_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SettingsBundleViewController_Example.release.xcconfig"; path = "Target Support Files/Pods-SettingsBundleViewController_Example/Pods-SettingsBundleViewController_Example.release.xcconfig"; sourceTree = "<group>"; };
+		B8B05A5E252E5FEA006C0604 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		B8B05A9F252E9D18006C0604 /* MainTV.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainTV.storyboard; sourceTree = "<group>"; };
+		B8B05AAB252EA17E006C0604 /* LaunchScreenTV.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreenTV.storyboard; sourceTree = "<group>"; };
+		B8B05AC3252EA56D006C0604 /* InfoTV.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = InfoTV.plist; sourceTree = "<group>"; };
 		B8BE3E9323AFBE27006F9F69 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		B8D7F2AF252E56E200E85B61 /* SettingsBundleViewController_ExampleTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SettingsBundleViewController_ExampleTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8E41CEF23A28B720068C174 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		B8F462B223AE2D33009138FD /* SettingsViewControllerCustom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewControllerCustom.swift; sourceTree = "<group>"; };
+		BBF0EC2B2D784C187ED01590 /* Pods-SettingsBundleViewController_ExampleTV.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SettingsBundleViewController_ExampleTV.debug.xcconfig"; path = "Target Support Files/Pods-SettingsBundleViewController_ExampleTV/Pods-SettingsBundleViewController_ExampleTV.debug.xcconfig"; sourceTree = "<group>"; };
 		E0BAA48C6F173339B111CCAA /* SettingsBundleViewController.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = SettingsBundleViewController.podspec; path = ../SettingsBundleViewController.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 /* End PBXFileReference section */
 
@@ -60,7 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				18FBC87C66B02EC0B395B798 /* Pods_SettingsBundleViewController_Example.framework in Frameworks */,
+				18FBC87C66B02EC0B395B798 /* (null) in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,6 +84,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				21994CB1B38513C304082382 /* Pods_SettingsBundleViewController_Tests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8D7F2A4252E56E200E85B61 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7623267208552806CB458107 /* Pods_SettingsBundleViewController_ExampleTV.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,6 +105,8 @@
 				79FF0D8973572702B6D5A737 /* Pods-SettingsBundleViewController_Example.release.xcconfig */,
 				046F47A4C9B6CC438C94B298 /* Pods-SettingsBundleViewController_Tests.debug.xcconfig */,
 				33F1DD8086A2D45075144951 /* Pods-SettingsBundleViewController_Tests.release.xcconfig */,
+				BBF0EC2B2D784C187ED01590 /* Pods-SettingsBundleViewController_ExampleTV.debug.xcconfig */,
+				5DA909BCFACA5EF90AE0473E /* Pods-SettingsBundleViewController_ExampleTV.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -103,6 +128,7 @@
 			children = (
 				607FACD01AFB9204008FA782 /* SettingsBundleViewController_Example.app */,
 				607FACE51AFB9204008FA782 /* SettingsBundleViewController_Tests.xctest */,
+				B8D7F2AF252E56E200E85B61 /* SettingsBundleViewController_ExampleTV.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -114,8 +140,10 @@
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
 				B8F462B223AE2D33009138FD /* SettingsViewControllerCustom.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
+				B8B05A9F252E9D18006C0604 /* MainTV.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
-				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
+				B8B05A5E252E5FEA006C0604 /* LaunchScreen.storyboard */,
+				B8B05AAB252EA17E006C0604 /* LaunchScreenTV.storyboard */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
 			);
 			name = "Example for SettingsBundleViewController";
@@ -126,6 +154,7 @@
 			isa = PBXGroup;
 			children = (
 				607FACD41AFB9204008FA782 /* Info.plist */,
+				B8B05AC3252EA56D006C0604 /* InfoTV.plist */,
 				B8BE3E9223AFBE27006F9F69 /* Model.xcdatamodeld */,
 				B8E41CEF23A28B720068C174 /* Settings.bundle */,
 			);
@@ -162,8 +191,8 @@
 		C9A12C374E29AAD0E34F3522 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				1090CA7BB045AA19CAC35FDD /* Pods_SettingsBundleViewController_Example.framework */,
 				3E67988BF4E26D77B5D49D31 /* Pods_SettingsBundleViewController_Tests.framework */,
+				34C03394C820DE6AFA48E8FC /* Pods_SettingsBundleViewController_ExampleTV.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -210,6 +239,25 @@
 			productReference = 607FACE51AFB9204008FA782 /* SettingsBundleViewController_Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		B8D7F29D252E56E200E85B61 /* SettingsBundleViewController_ExampleTV */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B8D7F2AC252E56E200E85B61 /* Build configuration list for PBXNativeTarget "SettingsBundleViewController_ExampleTV" */;
+			buildPhases = (
+				B8D7F29E252E56E200E85B61 /* [CP] Check Pods Manifest.lock */,
+				B8D7F29F252E56E200E85B61 /* Sources */,
+				B8D7F2A4252E56E200E85B61 /* Frameworks */,
+				B8D7F2A6252E56E200E85B61 /* Resources */,
+				B8D7F2AB252E56E200E85B61 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SettingsBundleViewController_ExampleTV;
+			productName = SettingsBundleViewController;
+			productReference = B8D7F2AF252E56E200E85B61 /* SettingsBundleViewController_ExampleTV.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -245,6 +293,7 @@
 			projectRoot = "";
 			targets = (
 				607FACCF1AFB9204008FA782 /* SettingsBundleViewController_Example */,
+				B8D7F29D252E56E200E85B61 /* SettingsBundleViewController_ExampleTV */,
 				607FACE41AFB9204008FA782 /* SettingsBundleViewController_Tests */,
 			);
 		};
@@ -257,7 +306,7 @@
 			files = (
 				B8E41CF023A28B720068C174 /* Settings.bundle in Resources */,
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
-				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
+				B8B05A5F252E5FEA006C0604 /* LaunchScreen.storyboard in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -266,6 +315,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8D7F2A6252E56E200E85B61 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B8B05AA1252E9D18006C0604 /* MainTV.storyboard in Resources */,
+				B8B05AAD252EA17E006C0604 /* LaunchScreenTV.storyboard in Resources */,
+				B8D7F2A7252E56E200E85B61 /* Settings.bundle in Resources */,
+				B8D7F2AA252E56E200E85B61 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -279,10 +339,10 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SettingsBundleViewController_Example/Pods-SettingsBundleViewController_Example-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
-				"${BUILT_PRODUCTS_DIR}/RxRelay/RxRelay.framework",
-				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
-				"${BUILT_PRODUCTS_DIR}/SettingsBundleViewController/SettingsBundleViewController.framework",
+				"${BUILT_PRODUCTS_DIR}/RxCocoa-iOS/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxRelay-iOS/RxRelay.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift-iOS/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SettingsBundleViewController-iOS/SettingsBundleViewController.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -340,6 +400,52 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		B8D7F29E252E56E200E85B61 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SettingsBundleViewController_ExampleTV-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B8D7F2AB252E56E200E85B61 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SettingsBundleViewController_ExampleTV/Pods-SettingsBundleViewController_ExampleTV-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/RxCocoa-tvOS/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxRelay-tvOS/RxRelay.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift-tvOS/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SettingsBundleViewController-tvOS/SettingsBundleViewController.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxRelay.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SettingsBundleViewController.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SettingsBundleViewController_ExampleTV/Pods-SettingsBundleViewController_ExampleTV-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		C89569AFF5DABAE6E76DFFCD /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -387,6 +493,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B8D7F29F252E56E200E85B61 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B8D7F2A0252E56E200E85B61 /* ViewController.swift in Sources */,
+				B8D7F2A1252E56E200E85B61 /* SettingsViewControllerCustom.swift in Sources */,
+				B8D7F2A2252E56E200E85B61 /* AppDelegate.swift in Sources */,
+				B8D7F2A3252E56E200E85B61 /* Model.xcdatamodeld in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -404,14 +521,6 @@
 				607FACDA1AFB9204008FA782 /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		607FACDE1AFB9204008FA782 /* LaunchScreen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				607FACDF1AFB9204008FA782 /* Base */,
-			);
-			name = LaunchScreen.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -465,7 +574,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -514,7 +623,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -594,6 +703,40 @@
 			};
 			name = Release;
 		};
+		B8D7F2AD252E56E200E85B61 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BBF0EC2B2D784C187ED01590 /* Pods-SettingsBundleViewController_ExampleTV.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = TVAppIcon;
+				INFOPLIST_FILE = SettingsBundleViewController/InfoTV.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MODULE_NAME = ExampleApp;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+			};
+			name = Debug;
+		};
+		B8D7F2AE252E56E200E85B61 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5DA909BCFACA5EF90AE0473E /* Pods-SettingsBundleViewController_ExampleTV.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = TVAppIcon;
+				INFOPLIST_FILE = SettingsBundleViewController/InfoTV.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MODULE_NAME = ExampleApp;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -620,6 +763,15 @@
 			buildConfigurations = (
 				607FACF31AFB9204008FA782 /* Debug */,
 				607FACF41AFB9204008FA782 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B8D7F2AC252E56E200E85B61 /* Build configuration list for PBXNativeTarget "SettingsBundleViewController_ExampleTV" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B8D7F2AD252E56E200E85B61 /* Debug */,
+				B8D7F2AE252E56E200E85B61 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

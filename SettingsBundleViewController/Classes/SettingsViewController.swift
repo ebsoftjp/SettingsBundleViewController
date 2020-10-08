@@ -7,10 +7,12 @@
 //
 
 import UIKit
+#if !os(tvOS)
 import EventKit
+import QuickLook
+#endif
 import CoreData
 import StoreKit
-import QuickLook
 import RxSwift
 import RxCocoa
 
@@ -25,8 +27,12 @@ open class SettingsViewController: UIViewController {
 
 	open var tableView: UITableView?
 	open var cellArray: [SettingsCellData]?
+	#if !os(tvOS)
 	open var titleText = Bundle(for: QLPreviewController.self)
 		.localizedString(forKey: "Settings", value: "Settings", table: nil)
+	#else
+	open var titleText = "Settings"
+	#endif
 
 	open var products = BehaviorRelay<[SKProduct]?>(value: nil)
 
@@ -121,27 +127,33 @@ open class SettingsViewController: UIViewController {
 			}
 		}
 
+		#if !os(tvOS)
 		let notificationCenter = NotificationCenter.default
 		notificationCenter.addObserver(self, selector:#selector(willShowKeyboard(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
 		notificationCenter.addObserver(self, selector:#selector(didShowKeyboard(_:)), name: UIResponder.keyboardDidShowNotification, object: nil)
 		notificationCenter.addObserver(self, selector:#selector(willHideKeyboard(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+		#endif
 	}
 
 	open override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
+		#if !os(tvOS)
 		let notificationCenter = NotificationCenter.default
 		notificationCenter.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
 		notificationCenter.removeObserver(self, name: UIResponder.keyboardDidShowNotification, object: nil)
 		notificationCenter.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+		#endif
 	}
 
 	// Will show keyboard
 	@objc open func willShowKeyboard(_ notification: Notification) {
+		#if !os(tvOS)
 		if let userInfo = notification.userInfo as? [String: Any],
 			let keyboardInfo = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
 			bottomConstraint?.constant = -keyboardInfo.cgRectValue.size.height
 			afterKeyboardAnimation(notification)
 		}
+		#endif
 	}
 
 	// Did show keyboard
@@ -180,12 +192,14 @@ open class SettingsViewController: UIViewController {
 
 	// Bottom animation for keyboard
 	open func afterKeyboardAnimation(_ notification: Notification) {
+		#if !os(tvOS)
 		if let userInfo = notification.userInfo as? [String: Any],
 			let duration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval {
 			UIView.animate(withDuration: duration, animations: { () -> Void in
 				self.view.layoutIfNeeded()
 			})
 		}
+		#endif
 	}
 
 	// Create cell data
@@ -271,6 +285,7 @@ open class SettingsViewController: UIViewController {
 		var res = [SettingsCellData]()
 
 		switch data.specifierType {
+		#if !os(tvOS)
 		case "PSEventMultiValueSpecifier":
 			return createEventMultiValue(data, entityType: .event)
 
@@ -282,6 +297,7 @@ open class SettingsViewController: UIViewController {
 
 		case "PSReminderToggleSwitchSpecifier":
 			return createEventToggleSwitch(data, entityType: .reminder)
+		#endif
 
 		case "PSCoreDataSpecifier":
 			createCoreData(withChildData: data)
@@ -358,7 +374,11 @@ open class SettingsViewController: UIViewController {
 		}
 
 		if #available(iOS 13.0, *) {
-			indicatorView = UIActivityIndicatorView(style: .medium)
+			if #available(tvOS 13.0, *) {
+				indicatorView = UIActivityIndicatorView(style: .medium)
+			} else {
+				indicatorView = UIActivityIndicatorView(style: .white)
+			}
 			indicatorView?.color = .white
 		} else {
 			indicatorView = UIActivityIndicatorView(style: .white)
@@ -459,6 +479,7 @@ open class SettingsViewController: UIViewController {
 			cell.textLabel?.text = localized(data.title)
 		case "PSTextViewSpecifier":
 			updateCellTextView(cell, data)
+		#if !os(tvOS)
 		case "PSEventMultiValueSpecifier":
 			updateCellEventMultiValue(cell, data, entityType: .event)
 		case "PSEventToggleSwitchSpecifier":
@@ -467,6 +488,7 @@ open class SettingsViewController: UIViewController {
 			updateCellEventMultiValue(cell, data, entityType: .reminder)
 		case "PSReminderToggleSwitchSpecifier":
 			updateCellEventToggleSwitch(cell, data, entityType: .reminder)
+		#endif
 		case "PSProductButtonSpecifier":
 			updateCellProductButton(cell, data)
 		case "PSCoreDataSpecifier":

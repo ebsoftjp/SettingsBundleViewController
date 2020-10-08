@@ -6,6 +6,7 @@
 //  Copyright (c) 2019 Mamoru Sugihara. All rights reserved.
 //
 
+#if !os(tvOS)
 import UIKit
 import EventKit
 import RxSwift
@@ -139,3 +140,4 @@ extension SettingsViewController {
 		}
 	}
 }
+#endif

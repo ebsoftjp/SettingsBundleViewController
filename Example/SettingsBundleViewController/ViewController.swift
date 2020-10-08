@@ -7,12 +7,16 @@
 //
 
 import UIKit
+#if !os(tvOS)
 import EventKit
+#endif
 import SettingsBundleViewController
 
 class ViewController: UIViewController {
 
+	#if !os(tvOS)
 	var eventStore: EKEventStore?
+	#endif
 
 	override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,7 +36,6 @@ class ViewController: UIViewController {
 
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
-		openSettings(0)
 	}
 
 	override func didReceiveMemoryWarning() {
@@ -46,6 +49,7 @@ class ViewController: UIViewController {
 	}
 
 	@IBAction func eventAuth(_ sender: UIButton) {
+		#if !os(tvOS)
 		var entityType: EKEntityType!
 		switch sender.titleLabel?.text {
 		case "Reminder auth":
@@ -78,9 +82,11 @@ class ViewController: UIViewController {
 		@unknown default:
 			fatalError()
 		}
+		#endif
 	}
 
 	func createEventStore() {
+		#if !os(tvOS)
 		if eventStore == nil,
 			(EKEventStore.authorizationStatus(for: .event) == .authorized
 				|| EKEventStore.authorizationStatus(for: .reminder) == .authorized) {
@@ -95,6 +101,7 @@ class ViewController: UIViewController {
 			}
 			print("========")
 		}
+		#endif
 	}
 
 }

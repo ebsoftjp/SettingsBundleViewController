@@ -23,6 +23,7 @@ public extension SettingsViewController {
 	func updateCellToggleSwitch(_ cell: SettingsTableViewCell, _ data: SettingsCellData) {
 		cell.textLabel?.attributedText = localizedTitle(data)
 
+		#if !os(tvOS)
 		if cell.accessoryView == nil {
 			let view = UISwitch()
 			cell.accessoryView = view
@@ -45,12 +46,14 @@ public extension SettingsViewController {
 				UserDefaults.standard.set(data.value(fromBool: $0), forKey: data.key!)
 			})
 			.disposed(by: cell.disposeBag)
+		#endif
 	}
 
 	// Slider
 	func updateCellSlider(_ cell: SettingsTableViewCell, _ data: SettingsCellData) {
 		cell.textLabel?.text = nil
 
+		#if !os(tvOS)
 		if cell.contentView.subviews.compactMap({ $0 as? UISlider }).count == 0 {
 			let dummyView = UILabel()
 			dummyView.font = .preferredFont(forTextStyle: .body)
@@ -109,6 +112,7 @@ public extension SettingsViewController {
 				UserDefaults.standard.set($0, forKey: data.key!)
 			})
 			.disposed(by: cell.disposeBag)
+		#endif
 	}
 	
 	// TitleValue
