@@ -40,6 +40,12 @@ public class SettingsCellData {
 			let index = values.firstIndex(of: value) {
 			return titles[index]
 		}
+		if let value = value as? Bool {
+			if let value = self.value(fromBool: value) as? String {
+				return value
+			}
+			return value ? "ON" : "OFF"
+		}
 		if let value = value as? Int {
 			return "\(value)"
 		}

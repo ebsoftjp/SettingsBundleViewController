@@ -27,11 +27,11 @@ open class SettingsViewController: UIViewController {
 
 	open var tableView: UITableView?
 	open var cellArray: [SettingsCellData]?
-	#if !os(tvOS)
+	#if os(tvOS)
+	open var titleText = "Settings"
+	#else
 	open var titleText = Bundle(for: QLPreviewController.self)
 		.localizedString(forKey: "Settings", value: "Settings", table: nil)
-	#else
-	open var titleText = "Settings"
 	#endif
 
 	open var products = BehaviorRelay<[SKProduct]?>(value: nil)
@@ -261,20 +261,29 @@ open class SettingsViewController: UIViewController {
 		return true
 	}
 
-	// Add child for MultiValue and RadioGroup
+	// Add child for MultiValue and RadioGroup and ToggleSwitch
 	open func appendChild(_ data: SettingsCellData) -> [SettingsCellData] {
 		var res = [SettingsCellData]()
-		if let key = data.key,
-			!key.isEmpty,
-			let titles = data.plistData["Titles"] as? [String],
-			let values = data.plistData["Values"] as? [Any] {
-			for i in 0..<titles.count {
-				res.append(SettingsCellData(plistData: [
-					"Type": "PSMultiValueSelectorSpecifier",
-					"Title": titles[i],
-					"Value": values[i],
-					"Key": key,
-				]))
+		if let key = data.key, !key.isEmpty {
+			// MultiValue and RadioGroup
+			var titles = data.plistData["Titles"] as? [String]
+			var values = data.plistData["Values"] as? [Any]
+
+			// ToggleSwitch
+			if data.specifierType == "PSToggleSwitchSpecifier" {
+				values = [true, false]
+				titles = (values as? [Bool])?.map({ data.title(fromValue: $0) ?? "" })
+			}
+
+			if let titles = titles, let values = values {
+				for i in 0..<titles.count {
+					res.append(SettingsCellData(plistData: [
+						"Type": "PSMultiValueSelectorSpecifier",
+						"Title": titles[i],
+						"Value": values[i],
+						"Key": key,
+					]))
+				}
 			}
 		}
 		return res
@@ -443,6 +452,10 @@ open class SettingsViewController: UIViewController {
 
 	open func createCell(_ reuseIdentifier: String) -> SettingsTableViewCell {
 		switch reuseIdentifier {
+		#if os(tvOS)
+		case "PSToggleSwitchSpecifier":
+			fallthrough
+		#endif
 		case "PSChildPaneSpecifier",
 			 "PSTitleValueSpecifier",
 			 "PSMultiValueSpecifier",

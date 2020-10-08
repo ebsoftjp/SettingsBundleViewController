@@ -23,7 +23,9 @@ public extension SettingsViewController {
 	func updateCellToggleSwitch(_ cell: SettingsTableViewCell, _ data: SettingsCellData) {
 		cell.textLabel?.attributedText = localizedTitle(data)
 
-		#if !os(tvOS)
+		#if os(tvOS)
+		updateCellMultiValue(cell, data)
+		#else
 		if cell.accessoryView == nil {
 			let view = UISwitch()
 			cell.accessoryView = view
