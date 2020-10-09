@@ -9,10 +9,10 @@
 import UIKit
 #if !os(tvOS)
 import EventKit
-import QuickLook
 #endif
 import CoreData
 import StoreKit
+import MediaPlayer
 import RxSwift
 import RxCocoa
 
@@ -27,12 +27,8 @@ open class SettingsViewController: UIViewController {
 
 	open var tableView: UITableView?
 	open var cellArray: [SettingsCellData]?
-	#if os(tvOS)
-	open var titleText = "Settings"
-	#else
-	open var titleText = Bundle(for: QLPreviewController.self)
-		.localizedString(forKey: "Settings", value: "Settings", table: nil)
-	#endif
+	open var titleText = Bundle(for: MPVolumeView.self)
+		.localizedString(forKey: "SETTINGS", value: "Settings", table: nil)
 
 	open var products = BehaviorRelay<[SKProduct]?>(value: nil)
 

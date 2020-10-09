@@ -6,6 +6,8 @@
 //  Copyright (c) 2019 Mamoru Sugihara. All rights reserved.
 //
 
+import ReplayKit
+
 public class SettingsCellData {
 
 	public let plistData: Dictionary<String, Any>
@@ -27,6 +29,11 @@ public class SettingsCellData {
 	public var isMultiValue: Bool { return specifierType?.contains("MultiValueSpecifier") ?? false }
 	public var isPush: Bool { return isChildPane || isMultiValue }
 
+	private var textOn = Bundle(for: RPPreviewViewController.self)
+		.localizedString(forKey: "CONTROL_CENTER_MICROPHONE_ON", value: "On", table: nil)
+	private var textOff = Bundle(for: RPPreviewViewController.self)
+		.localizedString(forKey: "CONTROL_CENTER_MICROPHONE_OFF", value: "Off", table: nil)
+
 	// Initialization
 	public init(plistData: Dictionary<String, Any>) {
 		self.plistData = plistData
@@ -44,7 +51,7 @@ public class SettingsCellData {
 			if let value = self.value(fromBool: value) as? String {
 				return value
 			}
-			return value ? "ON" : "OFF"
+			return value ? textOn : textOff
 		}
 		if let value = value as? Int {
 			return "\(value)"
