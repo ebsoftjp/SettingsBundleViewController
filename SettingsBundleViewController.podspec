@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SettingsBundleViewController'
-  s.version          = '0.1.14'
+  s.version          = '0.1.15'
   s.summary          = 'Create settings view controller from \'Settings.bundle\'.'
   s.swift_versions   = '5.0.0'
 

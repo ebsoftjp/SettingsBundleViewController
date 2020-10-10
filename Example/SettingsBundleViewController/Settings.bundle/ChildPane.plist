@@ -10,15 +10,29 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Test Switch</string>
+			<string>Test Switch String</string>
 			<key>Key</key>
-			<string>test_switch</string>
+			<string>test_switch_str</string>
 			<key>DefaultValue</key>
-			<true/>
+			<string>SW ON</string>
 			<key>TrueValue</key>
 			<string>SW ON</string>
 			<key>FalseValue</key>
 			<string>SW OFF</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Test Switch Int</string>
+			<key>Key</key>
+			<string>test_switch_int</string>
+			<key>DefaultValue</key>
+			<real>20.2</real>
+			<key>TrueValue</key>
+			<real>10.1</real>
+			<key>FalseValue</key>
+			<real>20.2</real>
 		</dict>
 		<dict>
 			<key>Type</key>

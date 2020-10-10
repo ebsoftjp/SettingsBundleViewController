@@ -24,7 +24,13 @@ public extension SettingsViewController {
 		cell.textLabel?.attributedText = localizedTitle(data)
 
 		#if os(tvOS)
-		updateCellMultiValue(cell, data)
+		updateCellTitleValue(cell, data)
+		cell.didSelectHandler = { tableView, indexPath in
+			if let value = UserDefaults.standard.value(forKey: data.key!) {
+				UserDefaults.standard.set(data.toggle(fromValue: value), forKey: data.key!)
+			}
+			tableView.deselectRow(at: indexPath, animated: true)
+		}
 		#else
 		if cell.accessoryView == nil {
 			let view = UISwitch()

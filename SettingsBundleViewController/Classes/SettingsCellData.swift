@@ -53,7 +53,7 @@ public class SettingsCellData {
 			}
 			return value ? textOn : textOff
 		}
-		if let value = value as? Int {
+		if let value = value {
 			return "\(value)"
 		}
 		return value as? String
@@ -78,6 +78,35 @@ public class SettingsCellData {
 	public func value(fromBool b: Bool) -> Any {
 		let key = b ? "TrueValue" : "FalseValue"
 		return plistData.keys.contains(key) ? plistData[key]! : b
+	}
+
+	// Toggle value for bool
+	public func toggle<T: Any>(fromValue value: T) -> Any? {
+		if let value = value as? Bool {
+			return !value
+		}
+		let value1 = self.value(fromBool: false)
+		let value2 = self.value(fromBool: true)
+		if let value = value as? String {
+			return toggle(src: value, value1, value2)
+		} else if let value = value as? Int {
+			return toggle(src: value, value1, value2)
+		} else if let value = value as? Double {
+			return toggle(src: value, value1, value2)
+		} else if let value = value as? Date {
+			return toggle(src: value, value1, value2)
+		} else if let value = value as? Data {
+			return toggle(src: value, value1, value2)
+		}
+		return value
+	}
+
+	// Toggle
+	public func toggle<T: Equatable>(src: T, _ v1: Any, _ v2: Any) -> T {
+		if let v1 = v1 as? T, let v2 = v2 as? T {
+			return src == v1 ? v2 : v1
+		}
+		return src
 	}
 
 	// Equal
