@@ -20,6 +20,19 @@ it, simply add the following line to your Podfile:
 pod 'SettingsBundleViewController'
 ```
 
+It is also available through [Swift Package Manager](https://swift.org/package-manager/).
+In Xcode, select File > Add Package Dependencies... and enter the following URL:
+
+```
+https://github.com/ebsoftjp/SettingsBundleViewController.git
+```
+
+Or add it to the `dependencies` of your `Package.swift`:
+
+```swift
+.package(url: "https://github.com/ebsoftjp/SettingsBundleViewController.git", from: "0.2.0")
+```
+
 ## Author
 
 Mamoru Sugihara, sugiharam2@gmail.com
